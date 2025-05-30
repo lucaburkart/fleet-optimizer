@@ -1,56 +1,56 @@
 Ship_Type;Year;Fuel;Capex_USD;Capacity_TEU_new
-Aurora;2025;LPG;0;1000
-Aurora;2026;LPG;0;1000
-Aurora;2027;LPG;0;1000
-Aurora;2028;LPG;0;1000
-Aurora;2029;LPG;0;1000
-Aurora;2030;LPG;0;1000
-Aurora;2031;LPG;0;1000
-Aurora;2032;LPG;0;1000
-Aurora;2033;LPG;0;1000
-Aurora;2034;LPG;0;1000
-Aurora;2035;LPG;0;1000
-Aurora;2036;LPG;0;1000
-Aurora;2037;LPG;0;1000
-Aurora;2038;LPG;0;1000
-Aurora;2039;LPG;0;1000
-Aurora;2040;LPG;0;1000
-Aurora;2041;LPG;0;1000
-Aurora;2042;LPG;0;1000
-Aurora;2043;LPG;0;1000
-Aurora;2044;LPG;0;1000
-Aurora;2045;LPG;0;1000
-Aurora;2046;LPG;0;1000
-Aurora;2047;LPG;0;1000
-Aurora;2048;LPG;0;1000
-Aurora;2049;LPG;0;1000
-Aurora;2050;LPG;0;1000
-Aurora;2025;Green Methanol;0;1000
-Aurora;2026;Green Methanol;0;1000
-Aurora;2027;Green Methanol;0;1000
-Aurora;2028;Green Methanol;0;1000
-Aurora;2029;Green Methanol;0;1000
-Aurora;2030;Green Methanol;0;1000
-Aurora;2031;Green Methanol;0;1000
-Aurora;2032;Green Methanol;0;1000
-Aurora;2033;Green Methanol;0;1000
-Aurora;2034;Green Methanol;0;1000
-Aurora;2035;Green Methanol;0;1000
-Aurora;2036;Green Methanol;0;1000
-Aurora;2037;Green Methanol;0;1000
-Aurora;2038;Green Methanol;0;1000
-Aurora;2039;Green Methanol;0;1000
-Aurora;2040;Green Methanol;0;1000
-Aurora;2041;Green Methanol;0;1000
-Aurora;2042;Green Methanol;0;1000
-Aurora;2043;Green Methanol;0;1000
-Aurora;2044;Green Methanol;0;1000
-Aurora;2045;Green Methanol;0;1000
-Aurora;2046;Green Methanol;0;1000
-Aurora;2047;Green Methanol;0;1000
-Aurora;2048;Green Methanol;0;1000
-Aurora;2049;Green Methanol;0;1000
-Aurora;2050;Green Methanol;0;1000
+Aurora;2025;LPG;1000000;1000
+Aurora;2026;LPG;990000;1000
+Aurora;2027;LPG;980000;1000
+Aurora;2028;LPG;970000;1000
+Aurora;2029;LPG;960000;1000
+Aurora;2030;LPG;950000;1000
+Aurora;2031;LPG;940000;1000
+Aurora;2032;LPG;930000;1000
+Aurora;2033;LPG;920000;1000
+Aurora;2034;LPG;910000;1000
+Aurora;2035;LPG;900000;1000
+Aurora;2036;LPG;890000;1000
+Aurora;2037;LPG;880000;1000
+Aurora;2038;LPG;870000;1000
+Aurora;2039;LPG;860000;1000
+Aurora;2040;LPG;850000;1000
+Aurora;2041;LPG;840000;1000
+Aurora;2042;LPG;830000;1000
+Aurora;2043;LPG;820000;1000
+Aurora;2044;LPG;810000;1000
+Aurora;2045;LPG;800000;1000
+Aurora;2046;LPG;790000;1000
+Aurora;2047;LPG;780000;1000
+Aurora;2048;LPG;770000;1000
+Aurora;2049;LPG;760000;1000
+Aurora;2050;LPG;750000;1000
+Aurora;2025;Green Methanol;1500000;1000
+Aurora;2026;Green Methanol;1450000;1000
+Aurora;2027;Green Methanol;1400000;1000
+Aurora;2028;Green Methanol;1350000;1000
+Aurora;2029;Green Methanol;1300000;1000
+Aurora;2030;Green Methanol;1250000;1000
+Aurora;2031;Green Methanol;1200000;1000
+Aurora;2032;Green Methanol;1150000;1000
+Aurora;2033;Green Methanol;1100000;1000
+Aurora;2034;Green Methanol;1050000;1000
+Aurora;2035;Green Methanol;1000000;1000
+Aurora;2036;Green Methanol;950000;1000
+Aurora;2037;Green Methanol;900000;1000
+Aurora;2038;Green Methanol;850000;1000
+Aurora;2039;Green Methanol;800000;1000
+Aurora;2040;Green Methanol;750000;1000
+Aurora;2041;Green Methanol;700000;1000
+Aurora;2042;Green Methanol;650000;1000
+Aurora;2043;Green Methanol;600000;1000
+Aurora;2044;Green Methanol;550000;1000
+Aurora;2045;Green Methanol;500000;1000
+Aurora;2046;Green Methanol;450000;1000
+Aurora;2047;Green Methanol;400000;1000
+Aurora;2048;Green Methanol;350000;1000
+Aurora;2049;Green Methanol;300000;1000
+Aurora;2050;Green Methanol;250000;1000
 Aurora;2025;Green Ammonia;0;1000
 Aurora;2026;Green Ammonia;0;1000
 Aurora;2027;Green Ammonia;0;1000
