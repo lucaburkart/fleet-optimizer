@@ -17,7 +17,7 @@ new_specs = pd.read_csv(BASE_PATH / "new_fleet_data2.1.csv", delimiter=";")
 
 # Normalize string columns only if they exist
 for df in (fleet, fuel, turbo, new_cost, new_specs):
-    for col in ("Ship_Type", "Fuel", "Fuel_Type"):  # guard existence
+    for col in ("Ship_Type", "Fuel", "Fuel_Type"):
         if col in df.columns:
             df[col] = df[col].astype(str).str.strip().str.title()
 
@@ -47,7 +47,7 @@ def run_fleet_optimization(co2_prices, fuel_price_overrides):
     ships = fleet["Ship_Type"].unique()
 
     # Precompute costs
-dfcost, retrocost, newopcost = {}, {}, {}
+    baseline_cost, retro_cost, new_op_cost = {}, {}, {}
     for s in ships:
         row = fleet[fleet.Ship_Type == s].iloc[0]
         dist, voy = row["Distance"], row["Voyages"]
@@ -60,11 +60,11 @@ dfcost, retrocost, newopcost = {}, {}, {}
             co2t = dist * voy * mj_base * diesel_lookup["CO2_g_per_MJ"] / 1e6
             cc = co2t * co2_prices.get(y, 0)
             ma = pw * diesel_lookup["Maintenance_USD_per_kW"]
-            dfcost[(s, y)] = (fc + cc + ma) * dfac(y)
+            baseline_cost[(s, y)] = (fc + cc + ma) * dfac(y)
 
             # Retrofit
             save = T_SAVE.get((s, y), 0) / 100
-            retrocost[(s, y)] = ((fc + cc) * (1 - save) + ma) * dfac(y)
+            retro_cost[(s, y)] = ((fc + cc) * (1 - save) + ma) * dfac(y)
 
             # New options
             for f in others:
@@ -74,7 +74,7 @@ dfcost, retrocost, newopcost = {}, {}, {}
                 co2n       = dist * voy * new_lu[s]["Energy_per_km_new"] * fuel_data["CO2_g_per_MJ"] / 1e6
                 cc_new     = co2n * co2_prices.get(y, 0)
                 ma_new     = new_lu[s]["Power_new"] * fuel_data["Maintenance_USD_per_kW"]
-                newopcost[(s, y, f)] = (fc_new + cc_new + ma_new) * dfac(y)
+                new_op_cost[(s, y, f)] = (fc_new + cc_new + ma_new) * dfac(y)
 
     # Build optimization model
     mdl = LpProblem("Fleet_Optimization", LpMinimize)
@@ -93,12 +93,12 @@ dfcost, retrocost, newopcost = {}, {}, {}
     for s in ships:
         for y in years_full:
             # baseline and retrofit
-            obj.append(dfcost[(s, y)])
-            obj.append(retrocost[(s, y)] * lpSum(t[(s, yy)] for yy in years_dec if yy <= y))
-            # new per fuel
+            obj.append(baseline_cost[(s, y)])
+            obj.append(retro_cost[(s, y)] * lpSum(t[(s, yy)] for yy in years_dec if yy <= y))
+            # new by fuel
             for f in others:
                 cum_new_f = lpSum(n[(s, yy, f)] for yy in years_dec if yy <= y)
-                obj.append(newopcost[(s, y, f)] * cum_new_f)
+                obj.append(new_op_cost[(s, y, f)] * cum_new_f)
         # Capex costs
         for y in years_dec:
             if (s, y) in T_COST:
@@ -111,7 +111,7 @@ dfcost, retrocost, newopcost = {}, {}, {}
     mdl.solve()
 
     # Build result tables
-    comp_val = sum(dfcost.values())
+    comp_val = sum(baseline_cost.values())
     opt_val  = value(mdl.objective)
     comp_df = pd.DataFrame({"Variante": ["Optimiert", "Diesel-only"], "Kosten PV (USD)": [opt_val, comp_val]})
     savings_df = pd.DataFrame({"Messgröße": ["Absolut (USD)", "Relativ (%)"], "Wert": [comp_val - opt_val, (comp_val - opt_val) / comp_val * 100]})
@@ -126,10 +126,10 @@ dfcost, retrocost, newopcost = {}, {}, {}
 
 # 3) UI Sliders
 st.sidebar.header("CO₂ Price Settings (€/t)")
-co2_prices = { y: st.sidebar.slider(f"CO₂ Price in {y}", 0, 1000, 100, step=50) for y in years_dec }
+co2_prices = {y: st.sidebar.slider(f"CO₂ Price in {y}", 0, 1000, 100, step=50) for y in years_dec}
 
 st.sidebar.header("Fuel Price Overrides (USD/kg)")
-fuel_price_overrides = { y: {} for y in years_full }
+fuel_price_overrides = {y: {} for y in years_full}
 for f in others:
     st.sidebar.subheader(f)
     for y in years_dec:
@@ -146,3 +146,5 @@ if st.sidebar.button("Run Optimization"):
     st.dataframe(savings_df)
     st.subheader("Decisions")
     st.dataframe(summary_df)
+
+
