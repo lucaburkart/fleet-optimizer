@@ -1,9 +1,16 @@
-Du:
 # app.py
 import streamlit as st
 import pandas as pd
 from pathlib import Path
-from pulp import LpProblem, LpMinimize, LpVariable, lpSum, LpBinary, LpStatusOptimal, value
+from pulp import (
+    LpProblem,
+    LpMinimize,
+    LpVariable,
+    lpSum,
+    LpBinary,
+    LpStatusOptimal,
+    value,
+)
 
 # ————————————————
 # Page config must come first
@@ -94,15 +101,25 @@ def run_fleet_optimization(co2_prices):
     obj = []
     for s in ships:
         for y in YEARS_FULL:
-            cum_retro = lpSum(t[(s, yy)] for yy in YEARS_DEC if yy <= y)
-            # pro Fuel-Typ separaten Indikator verwenden
+            # Retrofit-Indikator kumuliert
             for f in OTHERS:
                 cum_new_f = lpSum(n[(s, yy, f)] for yy in YEARS_DEC if yy <= y)
                 obj.append(new_op_cost[(s, y, f)] * cum_new_f * dfac(y))
-            obj.append(baseline_cost[(s, y)] * (1 - lpSum(t[(s, yy)] for yy in YEARS_DEC if yy <= y)) * dfac(y))
-            obj.append(retro_cost[(s, y)] * (lpSum(t[(s, yy)] for yy in YEARS_DEC if yy <= y)
-                                             - lpSum(n[(s, yy2, f2)] for yy2 in YEARS_DEC if yy2 <= y for f2 in OTHERS)
-                                            ) * dfac(y))
+
+            cum_retro = lpSum(t[(s, yy)] for yy in YEARS_DEC if yy <= y)
+            obj.append(
+                baseline_cost[(s, y)]
+                * (1 - cum_retro)
+                * dfac(y)
+            )
+            obj.append(
+                retro_cost[(s, y)]
+                * (cum_retro
+                   - lpSum(n[(s, yy2, f2)] for yy2 in YEARS_DEC if yy2 <= y for f2 in OTHERS)
+                  )
+                * dfac(y)
+            )
+
         # Investitionskosten
         for y in YEARS_DEC:
             if (s, y) in T_COST:
@@ -161,3 +178,4 @@ if st.sidebar.button("🔍 Run Optimization"):
     st.dataframe(savings_df.style.format({"Wert": "{:.2f}"}))
     st.subheader("🚢 Fleet Decisions")
     st.dataframe(summary_df)
+
