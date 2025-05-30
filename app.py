@@ -101,24 +101,18 @@ def run_fleet_optimization(co2_prices):
     obj = []
     for s in ships:
         for y in YEARS_FULL:
-            # Retrofit-Indikator kumuliert
+            # Neubau-Anteil kumuliert je Fuel
             for f in OTHERS:
                 cum_new_f = lpSum(n[(s, yy, f)] for yy in YEARS_DEC if yy <= y)
                 obj.append(new_op_cost[(s, y, f)] * cum_new_f * dfac(y))
 
+            # Diesel ohne Retrofit
             cum_retro = lpSum(t[(s, yy)] for yy in YEARS_DEC if yy <= y)
-            obj.append(
-                baseline_cost[(s, y)]
-                * (1 - cum_retro)
-                * dfac(y)
-            )
-            obj.append(
-                retro_cost[(s, y)]
-                * (cum_retro
-                   - lpSum(n[(s, yy2, f2)] for yy2 in YEARS_DEC if yy2 <= y for f2 in OTHERS)
-                  )
-                * dfac(y)
-            )
+            obj.append(baseline_cost[(s, y)] * (1 - cum_retro) * dfac(y))
+
+            # Diesel mit Retrofit (ohne Neubau)
+            retro_use = cum_retro - lpSum(n[(s, yy2, f2)] for yy2 in YEARS_DEC if yy2 <= y for f2 in OTHERS)
+            obj.append(retro_cost[(s, y)] * retro_use * dfac(y))
 
         # Investitionskosten
         for y in YEARS_DEC:
@@ -164,9 +158,18 @@ def run_fleet_optimization(co2_prices):
 # 3) Streamlit UI
 st.title("🚢 Fleet Optimization Web App")
 st.sidebar.header("CO₂ Price Settings (€/t)")
+
+# --- replace fixed dict with "stretched" block prices ---
+slider_years = [2025, 2030, 2035, 2040, 2045, 2050]
+base_prices = {
+    y: st.sidebar.slider(f"CO₂ Price in {y}", 0, 1000, 100, step=50)
+    for y in slider_years
+}
+
 co2_prices = {}
-for year in [2025, 2030, 2035, 2040, 2045, 2050]:
-    co2_prices[year] = st.sidebar.slider(f"CO₂ Price in {year}", 0, 1000, 100, step=50)
+for y in range(2025, 2051):
+    last_ref = max(year for year in slider_years if year <= y)
+    co2_prices[y] = base_prices[last_ref]
 
 if st.sidebar.button("🔍 Run Optimization"):
     with st.spinner("Running optimization..."):
@@ -178,4 +181,3 @@ if st.sidebar.button("🔍 Run Optimization"):
     st.dataframe(savings_df.style.format({"Wert": "{:.2f}"}))
     st.subheader("🚢 Fleet Decisions")
     st.dataframe(summary_df)
-
