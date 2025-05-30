@@ -4,7 +4,12 @@ import pandas as pd
 from pathlib import Path
 from pulp import LpProblem, LpMinimize, LpVariable, lpSum, LpBinary, LpStatusOptimal, value
 
-# 0) Smoke‐Test: zeigt, dass die UI lädt
+# ————————————————
+# Page config must come first
+st.set_page_config(page_title="Fleet Optimization", layout="wide")
+# ————————————————
+
+# Optionaler Smoke-Test
 st.write("✅ App lädt – UI ist aktiv")
 
 # 1) Daten einlesen
@@ -91,7 +96,7 @@ def run_fleet_optimization(co2_prices):
         for y in YEARS_DEC:
             mdl += t[(s, y)] <= 1 - lpSum(n[(s, yy, f)] for yy in YEARS_DEC if yy <= y for f in OTHERS)
 
-    # Zielfunktion zusammenbauen
+    # Zielfunktion
     obj = []
     for s in ships:
         for y in YEARS_FULL:
@@ -132,10 +137,10 @@ def run_fleet_optimization(co2_prices):
             ny_f = [(y, f) for y in YEARS_DEC for f in OTHERS if value(n[(s, y, f)]) > 0.5]
             ny, fuel_choice = (ny_f[0] if ny_f else (None, None))
             summary.append({
-                "Ship":      s,
-                "Turbo_Year":ty,
-                "New_Year":  ny,
-                "Fuel":      fuel_choice
+                "Ship":       s,
+                "Turbo_Year": ty,
+                "New_Year":   ny,
+                "Fuel":       fuel_choice
             })
         summary_df = pd.DataFrame(summary)
         return comp_df, savings_df, summary_df
@@ -143,7 +148,6 @@ def run_fleet_optimization(co2_prices):
         raise RuntimeError(f"Optimierung nicht erfolgreich, Status: {mdl.status}")
 
 # 3) Streamlit UI
-st.set_page_config(page_title="Fleet Optimization", layout="wide")
 st.title("🚢 Fleet Optimization Web App")
 
 st.sidebar.header("CO₂ Price Settings (€/t)")
