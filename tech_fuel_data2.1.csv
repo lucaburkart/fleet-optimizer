@@ -1,0 +1,105 @@
+Year;Fuel_Type;Energy_MJ_per_kg;CO2_g_per_MJ;Price_USD_per_kg;Maintenance_USD_per_kW
+2025;Diesel;43;74;1;20
+2025;LPG;46;63;1.2;22
+2025;Green Methanol;20;20;1.3;25
+2025;Green Ammonia;18;0;0.8;30
+2026;Diesel;43;74;1.02;20
+2026;LPG;46;63;1.2;22
+2026;Green Methanol;20;20;1.28;25
+2026;Green Ammonia;18;0;0.81;30
+2027;Diesel;43;74;1.04;20
+2027;LPG;46;63;1.2;22
+2027;Green Methanol;20;20;1.26;25
+2027;Green Ammonia;18;0;0.82;30
+2028;Diesel;43;74;1.06;20
+2028;LPG;46;63;1.2;22
+2028;Green Methanol;20;20;1.24;25
+2028;Green Ammonia;18;0;0.83;30
+2029;Diesel;43;74;1.08;20
+2029;LPG;46;63;1.2;22
+2029;Green Methanol;20;20;1.22;25
+2029;Green Ammonia;18;0;0.84;30
+2030;Diesel;43;74;1.1;20
+2030;LPG;46;63;1.2;22
+2030;Green Methanol;20;20;1.2;25
+2030;Green Ammonia;18;0;0.85;30
+2031;Diesel;43;74;1.12;20
+2031;LPG;46;63;1.2;22
+2031;Green Methanol;20;20;1.18;25
+2031;Green Ammonia;18;0;0.86;30
+2032;Diesel;43;74;1.14;20
+2032;LPG;46;63;0.86;22
+2032;Green Methanol;20;20;1.16;25
+2032;Green Ammonia;18;0;0.87;30
+2033;Diesel;43;74;1.16;20
+2033;LPG;46;63;1.2;22
+2033;Green Methanol;20;20;1.14;25
+2033;Green Ammonia;18;0;0.88;30
+2034;Diesel;43;74;1.18;20
+2034;LPG;46;63;1.2;22
+2034;Green Methanol;20;20;1.12;25
+2034;Green Ammonia;18;0;0.89;30
+2035;Diesel;43;74;1.2;20
+2035;LPG;46;63;1.2;22
+2035;Green Methanol;20;20;1.1;25
+2035;Green Ammonia;18;0;0.9;30
+2036;Diesel;43;74;1.22;20
+2036;LPG;46;63;1.2;22
+2036;Green Methanol;20;20;1.08;25
+2036;Green Ammonia;18;0;0.91;30
+2037;Diesel;43;74;1.24;20
+2037;LPG;46;63;1.2;22
+2037;Green Methanol;20;20;1.06;25
+2037;Green Ammonia;18;0;0.92;30
+2038;Diesel;43;74;1.26;20
+2038;LPG;46;63;1.04;22
+2038;Green Methanol;20;20;1.04;25
+2038;Green Ammonia;18;0;0.93;30
+2039;Diesel;43;74;1.28;20
+2039;LPG;46;63;1.2;22
+2039;Green Methanol;20;20;1.02;25
+2039;Green Ammonia;18;0;0.94;30
+2040;Diesel;43;74;1.3;20
+2040;LPG;46;63;1.1;22
+2040;Green Methanol;20;20;1;25
+2040;Green Ammonia;18;0;0.95;30
+2041;Diesel;43;74;1.32;20
+2041;LPG;46;63;1.2;22
+2041;Green Methanol;20;20;0.98;25
+2041;Green Ammonia;18;0;0.96;30
+2042;Diesel;43;74;1.34;20
+2042;LPG;46;63;1.2;22
+2042;Green Methanol;20;20;0.96;25
+2042;Green Ammonia;18;0;0.97;30
+2043;Diesel;43;74;1.36;20
+2043;LPG;46;63;1.2;22
+2043;Green Methanol;20;20;0.94;25
+2043;Green Ammonia;18;0;0.98;30
+2044;Diesel;43;74;1.38;20
+2044;LPG;46;63;1.2;22
+2044;Green Methanol;20;20;0.92;25
+2044;Green Ammonia;18;0;0.99;30
+2045;Diesel;43;74;1.4;20
+2045;LPG;46;63;1.2;22
+2045;Green Methanol;20;20;0.9;25
+2045;Green Ammonia;18;0;1;30
+2046;Diesel;43;74;1.42;20
+2046;LPG;46;63;1.2;22
+2046;Green Methanol;20;20;0.88;25
+2046;Green Ammonia;18;0;1.01;30
+2047;Diesel;43;74;1.44;20
+2047;LPG;46;63;1.2;22
+2047;Green Methanol;20;20;0.86;25
+2047;Green Ammonia;18;0;1.02;30
+2048;Diesel;43;74;1.46;20
+2048;LPG;46;63;1.2;22
+2048;Green Methanol;20;20;0.84;25
+2048;Green Ammonia;18;0;1.03;30
+2049;Diesel;43;74;1.48;20
+2049;LPG;46;63;1.2;22
+2049;Green Methanol;20;20;0.82;25
+2049;Green Ammonia;18;0;1.04;30
+2050;Diesel;43;74;1.5;20
+2050;LPG;46;63;1.2;22
+2050;Green Methanol;20;20;0.8;25
+2050;Green Ammonia;18;0;1.05;30

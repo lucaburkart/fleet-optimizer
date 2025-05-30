@@ -1,0 +1,5 @@
+Ship_Type;Route_ID;Distance;Voyages;Power;Speed_km_h;Energy_per_km (MJ/km)_new;;Capacity_TEU_new
+Aurora;r1;600;70;4000;25;600;;1000
+Horizon;r2;2000;30;13000;30;1500;;4000
+Neptun;r3;4000;20;40000;35;4500;;8000
+Titan;r4;8000;12;80000;40;7000;;17000

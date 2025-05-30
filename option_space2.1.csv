@@ -1,0 +1,417 @@
+Ship_Type;Year;Fuel
+Aurora;2025;Diesel
+Aurora;2025;LPG
+Aurora;2025;Green Methanol
+Aurora;2025;Green Ammonia
+Aurora;2026;Diesel
+Aurora;2026;LPG
+Aurora;2026;Green Methanol
+Aurora;2026;Green Ammonia
+Aurora;2027;Diesel
+Aurora;2027;LPG
+Aurora;2027;Green Methanol
+Aurora;2027;Green Ammonia
+Aurora;2028;Diesel
+Aurora;2028;LPG
+Aurora;2028;Green Methanol
+Aurora;2028;Green Ammonia
+Aurora;2029;Diesel
+Aurora;2029;LPG
+Aurora;2029;Green Methanol
+Aurora;2029;Green Ammonia
+Aurora;2030;Diesel
+Aurora;2030;LPG
+Aurora;2030;Green Methanol
+Aurora;2030;Green Ammonia
+Aurora;2031;Diesel
+Aurora;2031;LPG
+Aurora;2031;Green Methanol
+Aurora;2031;Green Ammonia
+Aurora;2032;Diesel
+Aurora;2032;LPG
+Aurora;2032;Green Methanol
+Aurora;2032;Green Ammonia
+Aurora;2033;Diesel
+Aurora;2033;LPG
+Aurora;2033;Green Methanol
+Aurora;2033;Green Ammonia
+Aurora;2034;Diesel
+Aurora;2034;LPG
+Aurora;2034;Green Methanol
+Aurora;2034;Green Ammonia
+Aurora;2035;Diesel
+Aurora;2035;LPG
+Aurora;2035;Green Methanol
+Aurora;2035;Green Ammonia
+Aurora;2036;Diesel
+Aurora;2036;LPG
+Aurora;2036;Green Methanol
+Aurora;2036;Green Ammonia
+Aurora;2037;Diesel
+Aurora;2037;LPG
+Aurora;2037;Green Methanol
+Aurora;2037;Green Ammonia
+Aurora;2038;Diesel
+Aurora;2038;LPG
+Aurora;2038;Green Methanol
+Aurora;2038;Green Ammonia
+Aurora;2039;Diesel
+Aurora;2039;LPG
+Aurora;2039;Green Methanol
+Aurora;2039;Green Ammonia
+Aurora;2040;Diesel
+Aurora;2040;LPG
+Aurora;2040;Green Methanol
+Aurora;2040;Green Ammonia
+Aurora;2041;Diesel
+Aurora;2041;LPG
+Aurora;2041;Green Methanol
+Aurora;2041;Green Ammonia
+Aurora;2042;Diesel
+Aurora;2042;LPG
+Aurora;2042;Green Methanol
+Aurora;2042;Green Ammonia
+Aurora;2043;Diesel
+Aurora;2043;LPG
+Aurora;2043;Green Methanol
+Aurora;2043;Green Ammonia
+Aurora;2044;Diesel
+Aurora;2044;LPG
+Aurora;2044;Green Methanol
+Aurora;2044;Green Ammonia
+Aurora;2045;Diesel
+Aurora;2045;LPG
+Aurora;2045;Green Methanol
+Aurora;2045;Green Ammonia
+Aurora;2046;Diesel
+Aurora;2046;LPG
+Aurora;2046;Green Methanol
+Aurora;2046;Green Ammonia
+Aurora;2047;Diesel
+Aurora;2047;LPG
+Aurora;2047;Green Methanol
+Aurora;2047;Green Ammonia
+Aurora;2048;Diesel
+Aurora;2048;LPG
+Aurora;2048;Green Methanol
+Aurora;2048;Green Ammonia
+Aurora;2049;Diesel
+Aurora;2049;LPG
+Aurora;2049;Green Methanol
+Aurora;2049;Green Ammonia
+Aurora;2050;Diesel
+Aurora;2050;LPG
+Aurora;2050;Green Methanol
+Aurora;2050;Green Ammonia
+Horizon;2025;Diesel
+Horizon;2025;LPG
+Horizon;2025;Green Methanol
+Horizon;2025;Green Ammonia
+Horizon;2026;Diesel
+Horizon;2026;LPG
+Horizon;2026;Green Methanol
+Horizon;2026;Green Ammonia
+Horizon;2027;Diesel
+Horizon;2027;LPG
+Horizon;2027;Green Methanol
+Horizon;2027;Green Ammonia
+Horizon;2028;Diesel
+Horizon;2028;LPG
+Horizon;2028;Green Methanol
+Horizon;2028;Green Ammonia
+Horizon;2029;Diesel
+Horizon;2029;LPG
+Horizon;2029;Green Methanol
+Horizon;2029;Green Ammonia
+Horizon;2030;Diesel
+Horizon;2030;LPG
+Horizon;2030;Green Methanol
+Horizon;2030;Green Ammonia
+Horizon;2031;Diesel
+Horizon;2031;LPG
+Horizon;2031;Green Methanol
+Horizon;2031;Green Ammonia
+Horizon;2032;Diesel
+Horizon;2032;LPG
+Horizon;2032;Green Methanol
+Horizon;2032;Green Ammonia
+Horizon;2033;Diesel
+Horizon;2033;LPG
+Horizon;2033;Green Methanol
+Horizon;2033;Green Ammonia
+Horizon;2034;Diesel
+Horizon;2034;LPG
+Horizon;2034;Green Methanol
+Horizon;2034;Green Ammonia
+Horizon;2035;Diesel
+Horizon;2035;LPG
+Horizon;2035;Green Methanol
+Horizon;2035;Green Ammonia
+Horizon;2036;Diesel
+Horizon;2036;LPG
+Horizon;2036;Green Methanol
+Horizon;2036;Green Ammonia
+Horizon;2037;Diesel
+Horizon;2037;LPG
+Horizon;2037;Green Methanol
+Horizon;2037;Green Ammonia
+Horizon;2038;Diesel
+Horizon;2038;LPG
+Horizon;2038;Green Methanol
+Horizon;2038;Green Ammonia
+Horizon;2039;Diesel
+Horizon;2039;LPG
+Horizon;2039;Green Methanol
+Horizon;2039;Green Ammonia
+Horizon;2040;Diesel
+Horizon;2040;LPG
+Horizon;2040;Green Methanol
+Horizon;2040;Green Ammonia
+Horizon;2041;Diesel
+Horizon;2041;LPG
+Horizon;2041;Green Methanol
+Horizon;2041;Green Ammonia
+Horizon;2042;Diesel
+Horizon;2042;LPG
+Horizon;2042;Green Methanol
+Horizon;2042;Green Ammonia
+Horizon;2043;Diesel
+Horizon;2043;LPG
+Horizon;2043;Green Methanol
+Horizon;2043;Green Ammonia
+Horizon;2044;Diesel
+Horizon;2044;LPG
+Horizon;2044;Green Methanol
+Horizon;2044;Green Ammonia
+Horizon;2045;Diesel
+Horizon;2045;LPG
+Horizon;2045;Green Methanol
+Horizon;2045;Green Ammonia
+Horizon;2046;Diesel
+Horizon;2046;LPG
+Horizon;2046;Green Methanol
+Horizon;2046;Green Ammonia
+Horizon;2047;Diesel
+Horizon;2047;LPG
+Horizon;2047;Green Methanol
+Horizon;2047;Green Ammonia
+Horizon;2048;Diesel
+Horizon;2048;LPG
+Horizon;2048;Green Methanol
+Horizon;2048;Green Ammonia
+Horizon;2049;Diesel
+Horizon;2049;LPG
+Horizon;2049;Green Methanol
+Horizon;2049;Green Ammonia
+Horizon;2050;Diesel
+Horizon;2050;LPG
+Horizon;2050;Green Methanol
+Horizon;2050;Green Ammonia
+Neptun;2025;Diesel
+Neptun;2025;LPG
+Neptun;2025;Green Methanol
+Neptun;2025;Green Ammonia
+Neptun;2026;Diesel
+Neptun;2026;LPG
+Neptun;2026;Green Methanol
+Neptun;2026;Green Ammonia
+Neptun;2027;Diesel
+Neptun;2027;LPG
+Neptun;2027;Green Methanol
+Neptun;2027;Green Ammonia
+Neptun;2028;Diesel
+Neptun;2028;LPG
+Neptun;2028;Green Methanol
+Neptun;2028;Green Ammonia
+Neptun;2029;Diesel
+Neptun;2029;LPG
+Neptun;2029;Green Methanol
+Neptun;2029;Green Ammonia
+Neptun;2030;Diesel
+Neptun;2030;LPG
+Neptun;2030;Green Methanol
+Neptun;2030;Green Ammonia
+Neptun;2031;Diesel
+Neptun;2031;LPG
+Neptun;2031;Green Methanol
+Neptun;2031;Green Ammonia
+Neptun;2032;Diesel
+Neptun;2032;LPG
+Neptun;2032;Green Methanol
+Neptun;2032;Green Ammonia
+Neptun;2033;Diesel
+Neptun;2033;LPG
+Neptun;2033;Green Methanol
+Neptun;2033;Green Ammonia
+Neptun;2034;Diesel
+Neptun;2034;LPG
+Neptun;2034;Green Methanol
+Neptun;2034;Green Ammonia
+Neptun;2035;Diesel
+Neptun;2035;LPG
+Neptun;2035;Green Methanol
+Neptun;2035;Green Ammonia
+Neptun;2036;Diesel
+Neptun;2036;LPG
+Neptun;2036;Green Methanol
+Neptun;2036;Green Ammonia
+Neptun;2037;Diesel
+Neptun;2037;LPG
+Neptun;2037;Green Methanol
+Neptun;2037;Green Ammonia
+Neptun;2038;Diesel
+Neptun;2038;LPG
+Neptun;2038;Green Methanol
+Neptun;2038;Green Ammonia
+Neptun;2039;Diesel
+Neptun;2039;LPG
+Neptun;2039;Green Methanol
+Neptun;2039;Green Ammonia
+Neptun;2040;Diesel
+Neptun;2040;LPG
+Neptun;2040;Green Methanol
+Neptun;2040;Green Ammonia
+Neptun;2041;Diesel
+Neptun;2041;LPG
+Neptun;2041;Green Methanol
+Neptun;2041;Green Ammonia
+Neptun;2042;Diesel
+Neptun;2042;LPG
+Neptun;2042;Green Methanol
+Neptun;2042;Green Ammonia
+Neptun;2043;Diesel
+Neptun;2043;LPG
+Neptun;2043;Green Methanol
+Neptun;2043;Green Ammonia
+Neptun;2044;Diesel
+Neptun;2044;LPG
+Neptun;2044;Green Methanol
+Neptun;2044;Green Ammonia
+Neptun;2045;Diesel
+Neptun;2045;LPG
+Neptun;2045;Green Methanol
+Neptun;2045;Green Ammonia
+Neptun;2046;Diesel
+Neptun;2046;LPG
+Neptun;2046;Green Methanol
+Neptun;2046;Green Ammonia
+Neptun;2047;Diesel
+Neptun;2047;LPG
+Neptun;2047;Green Methanol
+Neptun;2047;Green Ammonia
+Neptun;2048;Diesel
+Neptun;2048;LPG
+Neptun;2048;Green Methanol
+Neptun;2048;Green Ammonia
+Neptun;2049;Diesel
+Neptun;2049;LPG
+Neptun;2049;Green Methanol
+Neptun;2049;Green Ammonia
+Neptun;2050;Diesel
+Neptun;2050;LPG
+Neptun;2050;Green Methanol
+Neptun;2050;Green Ammonia
+Titan;2025;Diesel
+Titan;2025;LPG
+Titan;2025;Green Methanol
+Titan;2025;Green Ammonia
+Titan;2026;Diesel
+Titan;2026;LPG
+Titan;2026;Green Methanol
+Titan;2026;Green Ammonia
+Titan;2027;Diesel
+Titan;2027;LPG
+Titan;2027;Green Methanol
+Titan;2027;Green Ammonia
+Titan;2028;Diesel
+Titan;2028;LPG
+Titan;2028;Green Methanol
+Titan;2028;Green Ammonia
+Titan;2029;Diesel
+Titan;2029;LPG
+Titan;2029;Green Methanol
+Titan;2029;Green Ammonia
+Titan;2030;Diesel
+Titan;2030;LPG
+Titan;2030;Green Methanol
+Titan;2030;Green Ammonia
+Titan;2031;Diesel
+Titan;2031;LPG
+Titan;2031;Green Methanol
+Titan;2031;Green Ammonia
+Titan;2032;Diesel
+Titan;2032;LPG
+Titan;2032;Green Methanol
+Titan;2032;Green Ammonia
+Titan;2033;Diesel
+Titan;2033;LPG
+Titan;2033;Green Methanol
+Titan;2033;Green Ammonia
+Titan;2034;Diesel
+Titan;2034;LPG
+Titan;2034;Green Methanol
+Titan;2034;Green Ammonia
+Titan;2035;Diesel
+Titan;2035;LPG
+Titan;2035;Green Methanol
+Titan;2035;Green Ammonia
+Titan;2036;Diesel
+Titan;2036;LPG
+Titan;2036;Green Methanol
+Titan;2036;Green Ammonia
+Titan;2037;Diesel
+Titan;2037;LPG
+Titan;2037;Green Methanol
+Titan;2037;Green Ammonia
+Titan;2038;Diesel
+Titan;2038;LPG
+Titan;2038;Green Methanol
+Titan;2038;Green Ammonia
+Titan;2039;Diesel
+Titan;2039;LPG
+Titan;2039;Green Methanol
+Titan;2039;Green Ammonia
+Titan;2040;Diesel
+Titan;2040;LPG
+Titan;2040;Green Methanol
+Titan;2040;Green Ammonia
+Titan;2041;Diesel
+Titan;2041;LPG
+Titan;2041;Green Methanol
+Titan;2041;Green Ammonia
+Titan;2042;Diesel
+Titan;2042;LPG
+Titan;2042;Green Methanol
+Titan;2042;Green Ammonia
+Titan;2043;Diesel
+Titan;2043;LPG
+Titan;2043;Green Methanol
+Titan;2043;Green Ammonia
+Titan;2044;Diesel
+Titan;2044;LPG
+Titan;2044;Green Methanol
+Titan;2044;Green Ammonia
+Titan;2045;Diesel
+Titan;2045;LPG
+Titan;2045;Green Methanol
+Titan;2045;Green Ammonia
+Titan;2046;Diesel
+Titan;2046;LPG
+Titan;2046;Green Methanol
+Titan;2046;Green Ammonia
+Titan;2047;Diesel
+Titan;2047;LPG
+Titan;2047;Green Methanol
+Titan;2047;Green Ammonia
+Titan;2048;Diesel
+Titan;2048;LPG
+Titan;2048;Green Methanol
+Titan;2048;Green Ammonia
+Titan;2049;Diesel
+Titan;2049;LPG
+Titan;2049;Green Methanol
+Titan;2049;Green Ammonia
+Titan;2050;Diesel
+Titan;2050;LPG
+Titan;2050;Green Methanol
+Titan;2050;Green Ammonia

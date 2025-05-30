@@ -1,0 +1,313 @@
+Ship_Type;Year;Fuel;Retrofit_Cost_USD;Energy_Saving_%
+Aurora;2025;LPG;4000000;8
+Aurora;2026;LPG;3920000;8
+Aurora;2027;LPG;3840000;8
+Aurora;2028;LPG;3760000;8
+Aurora;2029;LPG;3680000;8
+Aurora;2030;LPG;3600000;8
+Aurora;2031;LPG;3520000;8
+Aurora;2032;LPG;3440000;8
+Aurora;2033;LPG;3360000;8
+Aurora;2034;LPG;3280000;8
+Aurora;2035;LPG;3200000;8
+Aurora;2036;LPG;3120000;8
+Aurora;2037;LPG;3040000;8
+Aurora;2038;LPG;2960000;8
+Aurora;2039;LPG;2880000;8
+Aurora;2040;LPG;2800000;8
+Aurora;2041;LPG;2720000;8
+Aurora;2042;LPG;2640000;8
+Aurora;2043;LPG;2560000;8
+Aurora;2044;LPG;2480000;8
+Aurora;2045;LPG;2400000;8
+Aurora;2046;LPG;2320000;8
+Aurora;2047;LPG;2240000;8
+Aurora;2048;LPG;2160000;8
+Aurora;2049;LPG;2080000;8
+Aurora;2050;LPG;2000000;8
+Aurora;2025;Green Methanol;6000000;8
+Aurora;2026;Green Methanol;5880000;8
+Aurora;2027;Green Methanol;5760000;8
+Aurora;2028;Green Methanol;5640000;8
+Aurora;2029;Green Methanol;5520000;8
+Aurora;2030;Green Methanol;5400000;8
+Aurora;2031;Green Methanol;5280000;8
+Aurora;2032;Green Methanol;5160000;8
+Aurora;2033;Green Methanol;5040000;8
+Aurora;2034;Green Methanol;4920000;8
+Aurora;2035;Green Methanol;4800000;8
+Aurora;2036;Green Methanol;4680000;8
+Aurora;2037;Green Methanol;4560000;8
+Aurora;2038;Green Methanol;4440000;8
+Aurora;2039;Green Methanol;4320000;8
+Aurora;2040;Green Methanol;4200000;8
+Aurora;2041;Green Methanol;4080000;8
+Aurora;2042;Green Methanol;3960000;8
+Aurora;2043;Green Methanol;3840000;8
+Aurora;2044;Green Methanol;3720000;8
+Aurora;2045;Green Methanol;3600000;8
+Aurora;2046;Green Methanol;3480000;8
+Aurora;2047;Green Methanol;3360000;8
+Aurora;2048;Green Methanol;3240000;8
+Aurora;2049;Green Methanol;3120000;8
+Aurora;2050;Green Methanol;3000000;8
+Aurora;2025;Green Ammonia;5000000;8
+Aurora;2026;Green Ammonia;4900000;8
+Aurora;2027;Green Ammonia;4800000;8
+Aurora;2028;Green Ammonia;4700000;8
+Aurora;2029;Green Ammonia;4600000;8
+Aurora;2030;Green Ammonia;4500000;8
+Aurora;2031;Green Ammonia;4400000;8
+Aurora;2032;Green Ammonia;4300000;8
+Aurora;2033;Green Ammonia;4200000;8
+Aurora;2034;Green Ammonia;4100000;8
+Aurora;2035;Green Ammonia;4000000;8
+Aurora;2036;Green Ammonia;3900000;8
+Aurora;2037;Green Ammonia;3800000;8
+Aurora;2038;Green Ammonia;3700000;8
+Aurora;2039;Green Ammonia;3600000;8
+Aurora;2040;Green Ammonia;3500000;8
+Aurora;2041;Green Ammonia;3400000;8
+Aurora;2042;Green Ammonia;3300000;8
+Aurora;2043;Green Ammonia;3200000;8
+Aurora;2044;Green Ammonia;3100000;8
+Aurora;2045;Green Ammonia;3000000;8
+Aurora;2046;Green Ammonia;2900000;8
+Aurora;2047;Green Ammonia;2800000;8
+Aurora;2048;Green Ammonia;2700000;8
+Aurora;2049;Green Ammonia;2600000;8
+Aurora;2050;Green Ammonia;2500000;8
+Horizon;2025;LPG;5000000;10
+Horizon;2026;LPG;4900000;10
+Horizon;2027;LPG;4800000;10
+Horizon;2028;LPG;4700000;10
+Horizon;2029;LPG;4600000;10
+Horizon;2030;LPG;4500000;10
+Horizon;2031;LPG;4400000;10
+Horizon;2032;LPG;4300000;10
+Horizon;2033;LPG;4200000;10
+Horizon;2034;LPG;4100000;10
+Horizon;2035;LPG;4000000;10
+Horizon;2036;LPG;3900000;10
+Horizon;2037;LPG;3800000;10
+Horizon;2038;LPG;3700000;10
+Horizon;2039;LPG;3600000;10
+Horizon;2040;LPG;3500000;10
+Horizon;2041;LPG;3400000;10
+Horizon;2042;LPG;3300000;10
+Horizon;2043;LPG;3200000;10
+Horizon;2044;LPG;3100000;10
+Horizon;2045;LPG;3000000;10
+Horizon;2046;LPG;2900000;10
+Horizon;2047;LPG;2800000;10
+Horizon;2048;LPG;2700000;10
+Horizon;2049;LPG;2600000;10
+Horizon;2050;LPG;2500000;10
+Horizon;2025;Green Methanol;7500000;10
+Horizon;2026;Green Methanol;7350000;10
+Horizon;2027;Green Methanol;7200000;10
+Horizon;2028;Green Methanol;7050000;10
+Horizon;2029;Green Methanol;6900000;10
+Horizon;2030;Green Methanol;6750000;10
+Horizon;2031;Green Methanol;6600000;10
+Horizon;2032;Green Methanol;6450000;10
+Horizon;2033;Green Methanol;6300000;10
+Horizon;2034;Green Methanol;6150000;10
+Horizon;2035;Green Methanol;6000000;10
+Horizon;2036;Green Methanol;5850000;10
+Horizon;2037;Green Methanol;5700000;10
+Horizon;2038;Green Methanol;5550000;10
+Horizon;2039;Green Methanol;5400000;10
+Horizon;2040;Green Methanol;5250000;10
+Horizon;2041;Green Methanol;5100000;10
+Horizon;2042;Green Methanol;4950000;10
+Horizon;2043;Green Methanol;4800000;10
+Horizon;2044;Green Methanol;4650000;10
+Horizon;2045;Green Methanol;4500000;10
+Horizon;2046;Green Methanol;4350000;10
+Horizon;2047;Green Methanol;4200000;10
+Horizon;2048;Green Methanol;4050000;10
+Horizon;2049;Green Methanol;3900000;10
+Horizon;2050;Green Methanol;3750000;10
+Horizon;2025;Green Ammonia;6250000;10
+Horizon;2026;Green Ammonia;6125000;10
+Horizon;2027;Green Ammonia;6000000;10
+Horizon;2028;Green Ammonia;5875000;10
+Horizon;2029;Green Ammonia;5750000;10
+Horizon;2030;Green Ammonia;5625000;10
+Horizon;2031;Green Ammonia;5500000;10
+Horizon;2032;Green Ammonia;5375000;10
+Horizon;2033;Green Ammonia;5250000;10
+Horizon;2034;Green Ammonia;5125000;10
+Horizon;2035;Green Ammonia;5000000;10
+Horizon;2036;Green Ammonia;4875000;10
+Horizon;2037;Green Ammonia;4750000;10
+Horizon;2038;Green Ammonia;4625000;10
+Horizon;2039;Green Ammonia;4500000;10
+Horizon;2040;Green Ammonia;4375000;10
+Horizon;2041;Green Ammonia;4250000;10
+Horizon;2042;Green Ammonia;4125000;10
+Horizon;2043;Green Ammonia;4000000;10
+Horizon;2044;Green Ammonia;3875000;10
+Horizon;2045;Green Ammonia;3750000;10
+Horizon;2046;Green Ammonia;3625000;10
+Horizon;2047;Green Ammonia;3500000;10
+Horizon;2048;Green Ammonia;3375000;10
+Horizon;2049;Green Ammonia;3250000;10
+Horizon;2050;Green Ammonia;3125000;10
+Neptun;2025;LPG;6000000;11
+Neptun;2026;LPG;5800000;11
+Neptun;2027;LPG;5600000;11
+Neptun;2028;LPG;5400000;11
+Neptun;2029;LPG;5200000;11
+Neptun;2030;LPG;5000000;11
+Neptun;2031;LPG;4800000;11
+Neptun;2032;LPG;4600000;11
+Neptun;2033;LPG;4400000;11
+Neptun;2034;LPG;4200000;11
+Neptun;2035;LPG;4000000;11
+Neptun;2036;LPG;3800000;11
+Neptun;2037;LPG;3600000;11
+Neptun;2038;LPG;3400000;11
+Neptun;2039;LPG;3200000;11
+Neptun;2040;LPG;3000000;11
+Neptun;2041;LPG;2800000;11
+Neptun;2042;LPG;2600000;11
+Neptun;2043;LPG;2400000;11
+Neptun;2044;LPG;2200000;11
+Neptun;2045;LPG;2000000;11
+Neptun;2046;LPG;1800000;11
+Neptun;2047;LPG;1600000;11
+Neptun;2048;LPG;1400000;11
+Neptun;2049;LPG;1200000;11
+Neptun;2050;LPG;1000000;11
+Neptun;2025;Green Methanol;9000000;11
+Neptun;2026;Green Methanol;8700000;11
+Neptun;2027;Green Methanol;8400000;11
+Neptun;2028;Green Methanol;8100000;11
+Neptun;2029;Green Methanol;7800000;11
+Neptun;2030;Green Methanol;7500000;11
+Neptun;2031;Green Methanol;7200000;11
+Neptun;2032;Green Methanol;6900000;11
+Neptun;2033;Green Methanol;6600000;11
+Neptun;2034;Green Methanol;6300000;11
+Neptun;2035;Green Methanol;6000000;11
+Neptun;2036;Green Methanol;5700000;11
+Neptun;2037;Green Methanol;5400000;11
+Neptun;2038;Green Methanol;5100000;11
+Neptun;2039;Green Methanol;4800000;11
+Neptun;2040;Green Methanol;4500000;11
+Neptun;2041;Green Methanol;4200000;11
+Neptun;2042;Green Methanol;3900000;11
+Neptun;2043;Green Methanol;3600000;11
+Neptun;2044;Green Methanol;3300000;11
+Neptun;2045;Green Methanol;3000000;11
+Neptun;2046;Green Methanol;2700000;11
+Neptun;2047;Green Methanol;2400000;11
+Neptun;2048;Green Methanol;2100000;11
+Neptun;2049;Green Methanol;1800000;11
+Neptun;2050;Green Methanol;1500000;11
+Neptun;2025;Green Ammonia;7500000;11
+Neptun;2026;Green Ammonia;7350000;11
+Neptun;2027;Green Ammonia;7200000;11
+Neptun;2028;Green Ammonia;7050000;11
+Neptun;2029;Green Ammonia;6900000;11
+Neptun;2030;Green Ammonia;6750000;11
+Neptun;2031;Green Ammonia;6600000;11
+Neptun;2032;Green Ammonia;6450000;11
+Neptun;2033;Green Ammonia;6300000;11
+Neptun;2034;Green Ammonia;6150000;11
+Neptun;2035;Green Ammonia;6000000;11
+Neptun;2036;Green Ammonia;5850000;11
+Neptun;2037;Green Ammonia;5700000;11
+Neptun;2038;Green Ammonia;5550000;11
+Neptun;2039;Green Ammonia;5400000;11
+Neptun;2040;Green Ammonia;5250000;11
+Neptun;2041;Green Ammonia;5100000;11
+Neptun;2042;Green Ammonia;4950000;11
+Neptun;2043;Green Ammonia;4800000;11
+Neptun;2044;Green Ammonia;4650000;11
+Neptun;2045;Green Ammonia;4500000;11
+Neptun;2046;Green Ammonia;4350000;11
+Neptun;2047;Green Ammonia;4200000;11
+Neptun;2048;Green Ammonia;4050000;11
+Neptun;2049;Green Ammonia;3900000;11
+Neptun;2050;Green Ammonia;3750000;11
+Titan;2025;LPG;1000000000;12
+Titan;2026;LPG;990000000;12
+Titan;2027;LPG;980000000;12
+Titan;2028;LPG;970000000;12
+Titan;2029;LPG;960000000;12
+Titan;2030;LPG;950000000;12
+Titan;2031;LPG;940000000;12
+Titan;2032;LPG;930000000;12
+Titan;2033;LPG;920000000;12
+Titan;2034;LPG;910000000;12
+Titan;2035;LPG;900000000;12
+Titan;2036;LPG;890000000;12
+Titan;2037;LPG;880000000;12
+Titan;2038;LPG;870000000;12
+Titan;2039;LPG;860000000;12
+Titan;2040;LPG;850000000;12
+Titan;2041;LPG;840000000;12
+Titan;2042;LPG;830000000;12
+Titan;2043;LPG;820000000;12
+Titan;2044;LPG;810000000;12
+Titan;2045;LPG;800000000;12
+Titan;2046;LPG;790000000;12
+Titan;2047;LPG;780000000;12
+Titan;2048;LPG;770000000;12
+Titan;2049;LPG;760000000;12
+Titan;2050;LPG;750000000;12
+Titan;2025;Green Methanol;5000000;12
+Titan;2026;Green Methanol;4900000;12
+Titan;2027;Green Methanol;4800000;12
+Titan;2028;Green Methanol;4700000;12
+Titan;2029;Green Methanol;4600000;12
+Titan;2030;Green Methanol;4500000;12
+Titan;2031;Green Methanol;4400000;12
+Titan;2032;Green Methanol;4300000;12
+Titan;2033;Green Methanol;4200000;12
+Titan;2034;Green Methanol;4100000;12
+Titan;2035;Green Methanol;4000000;12
+Titan;2036;Green Methanol;3900000;12
+Titan;2037;Green Methanol;3800000;12
+Titan;2038;Green Methanol;3700000;12
+Titan;2039;Green Methanol;3600000;12
+Titan;2040;Green Methanol;3500000;12
+Titan;2041;Green Methanol;3400000;12
+Titan;2042;Green Methanol;3300000;12
+Titan;2043;Green Methanol;3200000;12
+Titan;2044;Green Methanol;3100000;12
+Titan;2045;Green Methanol;3000000;12
+Titan;2046;Green Methanol;2900000;12
+Titan;2047;Green Methanol;2800000;12
+Titan;2048;Green Methanol;2700000;12
+Titan;2049;Green Methanol;2600000;12
+Titan;2050;Green Methanol;2500000;12
+Titan;2025;Green Ammonia;8750000;12
+Titan;2026;Green Ammonia;8575000;12
+Titan;2027;Green Ammonia;8400000;12
+Titan;2028;Green Ammonia;8225000;12
+Titan;2029;Green Ammonia;8050000;12
+Titan;2030;Green Ammonia;7875000;12
+Titan;2031;Green Ammonia;7700000;12
+Titan;2032;Green Ammonia;7525000;12
+Titan;2033;Green Ammonia;7350000;12
+Titan;2034;Green Ammonia;7175000;12
+Titan;2035;Green Ammonia;7000000;12
+Titan;2036;Green Ammonia;6825000;12
+Titan;2037;Green Ammonia;6650000;12
+Titan;2038;Green Ammonia;6475000;12
+Titan;2039;Green Ammonia;6300000;12
+Titan;2040;Green Ammonia;6125000;12
+Titan;2041;Green Ammonia;5950000;12
+Titan;2042;Green Ammonia;5775000;12
+Titan;2043;Green Ammonia;5600000;12
+Titan;2044;Green Ammonia;5425000;12
+Titan;2045;Green Ammonia;5250000;12
+Titan;2046;Green Ammonia;5075000;12
+Titan;2047;Green Ammonia;4900000;12
+Titan;2048;Green Ammonia;4725000;12
+Titan;2049;Green Ammonia;4550000;12
+Titan;2050;Green Ammonia;4375000;12
