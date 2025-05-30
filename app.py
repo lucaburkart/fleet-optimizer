@@ -48,8 +48,8 @@ new_lu = {
     for ship, row in fleet_new_df.iterrows()
 }
 
-# 2) Modell-Funktion mit korrigierter Zielfunktion für Neubauten
-def run_fleet_optimization(co2_prices):
+# 2) Modell-Funktion
+def run_fleet_optimization(co2_prices, diesel_prices):
     ships      = fleet["Ship_Type"].unique()
     YEARS_DEC  = list(range(2025, 2051, 5))
     YEARS_FULL = list(range(2025, 2051))
@@ -68,7 +68,9 @@ def run_fleet_optimization(co2_prices):
         mj   = row.get("Energy_per_km (MJ/km)", row.get("Energy_per_km"))
         pw   = row["Power"]
         for y in YEARS_FULL:
-            fc_base = dist * voy * mj / fuel_lu[(y, BASIC)]["Energy_MJ_per_kg"] * fuel_lu[(y, BASIC)]["Price_USD_per_kg"]
+            # override Diesel price per kg
+            price_diesel = diesel_prices[y]
+            fc_base = dist * voy * mj / fuel_lu[(y, BASIC)]["Energy_MJ_per_kg"] * price_diesel
             co2t    = dist * voy * mj * fuel_lu[(y, BASIC)]["CO2_g_per_MJ"] / 1e6
             cc_base = co2t * co2_prices.get(y, 0)
             ma_base = pw * fuel_lu[(y, BASIC)]["Maintenance_USD_per_kW"]
@@ -157,23 +159,33 @@ def run_fleet_optimization(co2_prices):
 
 # 3) Streamlit UI
 st.title("🚢 Fleet Optimization Web App")
-st.sidebar.header("CO₂ Price Settings (€/t)")
 
-# --- replace fixed dict with "stretched" block prices ---
+# CO₂-Preis Slider (blockweise alle 5 Jahre)
+st.sidebar.header("CO₂ Price Settings (€/t)")
 slider_years = [2025, 2030, 2035, 2040, 2045, 2050]
-base_prices = {
+base_co2_prices = {
     y: st.sidebar.slider(f"CO₂ Price in {y}", 0, 1000, 100, step=50)
     for y in slider_years
 }
-
 co2_prices = {}
 for y in range(2025, 2051):
     last_ref = max(year for year in slider_years if year <= y)
-    co2_prices[y] = base_prices[last_ref]
+    co2_prices[y] = base_co2_prices[last_ref]
+
+# Diesel-Preis Slider (USD per kg, blockweise alle 5 Jahre)
+st.sidebar.header("Diesel Price Settings (USD/kg)")
+base_diesel_prices = {
+    y: st.sidebar.slider(f"Diesel Price in {y}", 0.0, 10.0, 1.0, step=0.5)
+    for y in slider_years
+}
+diesel_prices = {}
+for y in range(2025, 2051):
+    last_ref = max(year for year in slider_years if year <= y)
+    diesel_prices[y] = base_diesel_prices[last_ref]
 
 if st.sidebar.button("🔍 Run Optimization"):
     with st.spinner("Running optimization..."):
-        comp_df, savings_df, summary_df = run_fleet_optimization(co2_prices)
+        comp_df, savings_df, summary_df = run_fleet_optimization(co2_prices, diesel_prices)
     st.success("Done!")
     st.subheader("📊 Cost Comparison")
     st.dataframe(comp_df.style.format({"Kosten PV (USD)": "{:,.0f}"}))
@@ -181,3 +193,4 @@ if st.sidebar.button("🔍 Run Optimization"):
     st.dataframe(savings_df.style.format({"Wert": "{:.2f}"}))
     st.subheader("🚢 Fleet Decisions")
     st.dataframe(summary_df)
+
