@@ -134,11 +134,11 @@ def run_fleet_optimization(co2_prices, diesel_prices):
         saving_pct     = saving_abs / diesel_cost * 100
 
         comp_df = pd.DataFrame({
-            "Variante": ["Optimiert", "Diesel-only"],
+            "Variant": ["Optimized", "Baseline (no retrofit, no new ships)"],
             "Kosten PV (USD)": [optimized_cost, diesel_cost]
         })
         savings_df = pd.DataFrame({
-            "Messgröße": ["Ersparnis absolut (USD)", "Ersparnis relativ (%)"],
+            "Messgröße": ["Savings absolute (USD)", "Savings relative (%)"],
             "Wert":      [saving_abs, saving_pct]
         })
         summary = []
