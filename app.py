@@ -9,7 +9,7 @@ from pulp import LpProblem, LpMinimize, LpVariable, lpSum, LpBinary, LpStatusOpt
 st.set_page_config(page_title="Fleet Optimization", layout="wide")
 # ————————————————
 
-# Optionaler Smoke-Test
+# Smoke-Test
 st.write("✅ App lädt – UI ist aktiv")
 
 # 1) Daten einlesen
@@ -20,19 +20,16 @@ turbo     = pd.read_csv(BASE_PATH / "turbo_retrofit.1.csv",  delimiter=";")
 new_cost  = pd.read_csv(BASE_PATH / "new_ship_cost.1.csv",   delimiter=";")
 new_specs = pd.read_csv(BASE_PATH / "new_fleet_data2.1.csv", delimiter=";")
 
-# Einheitliche Groß-/Kleinschreibung
 for df in (fleet, fuel, turbo, new_cost, new_specs):
     for col in ("Ship_Type", "Fuel", "Fuel_Type"):
         if col in df.columns:
             df[col] = df[col].astype(str).str.strip().str.title()
 
-# Nachschlagetabellen
 fuel_lu = fuel.set_index(["Year", "Fuel_Type"]).to_dict("index")
 T_COST  = turbo.set_index(["Ship_Type", "Year"])["Retrofit_Cost_USD"].to_dict()
 T_SAVE  = turbo.set_index(["Ship_Type", "Year"])["Energy_Saving_%"].to_dict()
 N_COST  = new_cost.set_index(["Ship_Type", "Fuel", "Year"])["Capex_USD"].to_dict()
 
-# Neue Schiffsdaten
 fleet_new_df = new_specs.set_index("Ship_Type")
 new_lu = {
     ship: {
@@ -43,7 +40,7 @@ new_lu = {
     for ship, row in fleet_new_df.iterrows()
 }
 
-# 2) Modell-Funktion
+# 2) Modell-Funktion mit korrigierter Zielfunktion für Neubauten
 def run_fleet_optimization(co2_prices):
     ships      = fleet["Ship_Type"].unique()
     YEARS_DEC  = list(range(2025, 2051, 5))
@@ -63,18 +60,15 @@ def run_fleet_optimization(co2_prices):
         mj   = row.get("Energy_per_km (MJ/km)", row.get("Energy_per_km"))
         pw   = row["Power"]
         for y in YEARS_FULL:
-            # Basis (Diesel)
             fc_base = dist * voy * mj / fuel_lu[(y, BASIC)]["Energy_MJ_per_kg"] * fuel_lu[(y, BASIC)]["Price_USD_per_kg"]
             co2t    = dist * voy * mj * fuel_lu[(y, BASIC)]["CO2_g_per_MJ"] / 1e6
             cc_base = co2t * co2_prices.get(y, 0)
             ma_base = pw * fuel_lu[(y, BASIC)]["Maintenance_USD_per_kW"]
             baseline_cost[(s, y)] = fc_base + cc_base + ma_base
 
-            # Retrofit (Turbo)
             save = T_SAVE.get((s, y), 0) / 100
             retro_cost[(s, y)] = (fc_base + cc_base) * (1 - save) + ma_base
 
-            # Neue Betriebskosten für Alternativen
             for f in OTHERS:
                 mj_new = new_lu[s]["Energy_per_km_new"]
                 pw_new = new_lu[s]["Power_new"]
@@ -84,10 +78,9 @@ def run_fleet_optimization(co2_prices):
                 ma_new = pw_new * fuel_lu[(y, f)]["Maintenance_USD_per_kW"]
                 new_op_cost[(s, y, f)] = fc_new + cc_new + ma_new
 
-    # Modell initialisieren
     mdl = LpProblem("Fleet_Optimization", LpMinimize)
-    t   = LpVariable.dicts("Turbo", [(s, y) for s in ships for y in YEARS_DEC], 0, 1, LpBinary)
-    n   = LpVariable.dicts("New",   [(s, y, f) for s in ships for y in YEARS_DEC for f in OTHERS], 0, 1, LpBinary)
+    t = LpVariable.dicts("Turbo", [(s, y) for s in ships for y in YEARS_DEC], 0, 1, LpBinary)
+    n = LpVariable.dicts("New",   [(s, y, f) for s in ships for y in YEARS_DEC for f in OTHERS], 0, 1, LpBinary)
 
     # Nebenbedingungen
     for s in ships:
@@ -101,11 +94,15 @@ def run_fleet_optimization(co2_prices):
     for s in ships:
         for y in YEARS_FULL:
             cum_retro = lpSum(t[(s, yy)] for yy in YEARS_DEC if yy <= y)
-            cum_new   = lpSum(n[(s, yy, f)] for yy in YEARS_DEC if yy <= y for f in OTHERS)
-            obj.append(baseline_cost[(s, y)] * (1 - cum_retro) * dfac(y))
-            obj.append(retro_cost[(s, y)] * (cum_retro - cum_new) * dfac(y))
+            # pro Fuel-Typ separaten Indikator verwenden
             for f in OTHERS:
-                obj.append(new_op_cost[(s, y, f)] * cum_new * dfac(y))
+                cum_new_f = lpSum(n[(s, yy, f)] for yy in YEARS_DEC if yy <= y)
+                obj.append(new_op_cost[(s, y, f)] * cum_new_f * dfac(y))
+            obj.append(baseline_cost[(s, y)] * (1 - lpSum(t[(s, yy)] for yy in YEARS_DEC if yy <= y)) * dfac(y))
+            obj.append(retro_cost[(s, y)] * (lpSum(t[(s, yy)] for yy in YEARS_DEC if yy <= y)
+                                             - lpSum(n[(s, yy2, f2)] for yy2 in YEARS_DEC if yy2 <= y for f2 in OTHERS)
+                                            ) * dfac(y))
+        # Investitionskosten
         for y in YEARS_DEC:
             if (s, y) in T_COST:
                 obj.append(T_COST[(s, y)] * t[(s, y)] * dfac(y))
@@ -116,7 +113,6 @@ def run_fleet_optimization(co2_prices):
     mdl += lpSum(obj)
     mdl.solve()
 
-    # Ergebnisse aufbereiten
     if mdl.status == LpStatusOptimal:
         optimized_cost = value(mdl.objective)
         diesel_cost    = sum(baseline_cost[(s, y)] * dfac(y) for s in ships for y in YEARS_FULL)
@@ -134,8 +130,8 @@ def run_fleet_optimization(co2_prices):
         summary = []
         for s in ships:
             ty = next((y for y in YEARS_DEC if value(t[(s, y)]) > 0.5), None)
-            ny_f = [(y, f) for y in YEARS_DEC for f in OTHERS if value(n[(s, y, f)]) > 0.5]
-            ny, fuel_choice = (ny_f[0] if ny_f else (None, None))
+            chosen = [(yy, ff) for yy in YEARS_DEC for ff in OTHERS if value(n[(s, yy, ff)]) > 0.5]
+            ny, fuel_choice = chosen[0] if chosen else (None, None)
             summary.append({
                 "Ship":       s,
                 "Turbo_Year": ty,
@@ -149,7 +145,6 @@ def run_fleet_optimization(co2_prices):
 
 # 3) Streamlit UI
 st.title("🚢 Fleet Optimization Web App")
-
 st.sidebar.header("CO₂ Price Settings (€/t)")
 co2_prices = {}
 for year in [2025, 2030, 2035, 2040, 2045, 2050]:
@@ -159,12 +154,9 @@ if st.sidebar.button("🔍 Run Optimization"):
     with st.spinner("Running optimization..."):
         comp_df, savings_df, summary_df = run_fleet_optimization(co2_prices)
     st.success("Done!")
-
     st.subheader("📊 Cost Comparison")
     st.dataframe(comp_df.style.format({"Kosten PV (USD)": "{:,.0f}"}))
-
     st.subheader("💰 Savings")
     st.dataframe(savings_df.style.format({"Wert": "{:.2f}"}))
-
     st.subheader("🚢 Fleet Decisions")
     st.dataframe(summary_df)
