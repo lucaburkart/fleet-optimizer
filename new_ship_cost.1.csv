@@ -1,160 +1,160 @@
 Ship_Type;Year;Fuel;Capex_USD;Capacity_TEU_new
-Aurora;2025;LPG;4000000;1000
-Aurora;2026;LPG;3920000;1000
-Aurora;2027;LPG;3840000;1000
-Aurora;2028;LPG;3760000;1000
-Aurora;2029;LPG;3680000;1000
-Aurora;2030;LPG;3600000;1000
-Aurora;2031;LPG;3520000;1000
-Aurora;2032;LPG;3440000;1000
-Aurora;2033;LPG;3360000;1000
-Aurora;2034;LPG;3280000;1000
-Aurora;2035;LPG;3200000;1000
-Aurora;2036;LPG;3120000;1000
-Aurora;2037;LPG;3040000;1000
-Aurora;2038;LPG;2960000;1000
-Aurora;2039;LPG;2880000;1000
-Aurora;2040;LPG;2800000;1000
-Aurora;2041;LPG;2720000;1000
-Aurora;2042;LPG;2640000;1000
-Aurora;2043;LPG;2560000;1000
-Aurora;2044;LPG;2480000;1000
-Aurora;2045;LPG;2400000;1000
-Aurora;2046;LPG;2320000;1000
-Aurora;2047;LPG;2240000;1000
-Aurora;2048;LPG;2160000;1000
-Aurora;2049;LPG;2080000;1000
-Aurora;2050;LPG;2000000;1000
-Aurora;2025;Green Methanol;6000000;1000
-Aurora;2026;Green Methanol;5880000;1000
-Aurora;2027;Green Methanol;5760000;1000
-Aurora;2028;Green Methanol;5640000;1000
-Aurora;2029;Green Methanol;5520000;1000
-Aurora;2030;Green Methanol;5400000;1000
-Aurora;2031;Green Methanol;5280000;1000
-Aurora;2032;Green Methanol;5160000;1000
-Aurora;2033;Green Methanol;5040000;1000
-Aurora;2034;Green Methanol;4920000;1000
-Aurora;2035;Green Methanol;4800000;1000
-Aurora;2036;Green Methanol;4680000;1000
-Aurora;2037;Green Methanol;4560000;1000
-Aurora;2038;Green Methanol;4440000;1000
-Aurora;2039;Green Methanol;4320000;1000
-Aurora;2040;Green Methanol;4200000;1000
-Aurora;2041;Green Methanol;4080000;1000
-Aurora;2042;Green Methanol;3960000;1000
-Aurora;2043;Green Methanol;3840000;1000
-Aurora;2044;Green Methanol;3720000;1000
-Aurora;2045;Green Methanol;3600000;1000
-Aurora;2046;Green Methanol;3480000;1000
-Aurora;2047;Green Methanol;3360000;1000
-Aurora;2048;Green Methanol;3240000;1000
-Aurora;2049;Green Methanol;3120000;1000
-Aurora;2050;Green Methanol;3000000;1000
-Aurora;2025;Green Ammonia;5000000;1000
-Aurora;2026;Green Ammonia;4900000;1000
-Aurora;2027;Green Ammonia;4800000;1000
-Aurora;2028;Green Ammonia;4700000;1000
-Aurora;2029;Green Ammonia;4600000;1000
-Aurora;2030;Green Ammonia;4500000;1000
-Aurora;2031;Green Ammonia;4400000;1000
-Aurora;2032;Green Ammonia;4300000;1000
-Aurora;2033;Green Ammonia;4200000;1000
-Aurora;2034;Green Ammonia;4100000;1000
-Aurora;2035;Green Ammonia;4000000;1000
-Aurora;2036;Green Ammonia;3900000;1000
-Aurora;2037;Green Ammonia;3800000;1000
-Aurora;2038;Green Ammonia;3700000;1000
-Aurora;2039;Green Ammonia;3600000;1000
-Aurora;2040;Green Ammonia;3500000;1000
-Aurora;2041;Green Ammonia;3400000;1000
-Aurora;2042;Green Ammonia;3300000;1000
-Aurora;2043;Green Ammonia;3200000;1000
-Aurora;2044;Green Ammonia;3100000;1000
-Aurora;2045;Green Ammonia;3000000;1000
-Aurora;2046;Green Ammonia;2900000;1000
-Aurora;2047;Green Ammonia;2800000;1000
-Aurora;2048;Green Ammonia;2700000;1000
-Aurora;2049;Green Ammonia;2600000;1000
-Aurora;2050;Green Ammonia;2500000;1000
-Horizon;2025;LPG;5000000;4000
-Horizon;2026;LPG;4900000;4000
-Horizon;2027;LPG;4800000;4000
-Horizon;2028;LPG;4700000;4000
-Horizon;2029;LPG;4600000;4000
-Horizon;2030;LPG;4500000;4000
-Horizon;2031;LPG;4400000;4000
-Horizon;2032;LPG;4300000;4000
-Horizon;2033;LPG;4200000;4000
-Horizon;2034;LPG;4100000;4000
-Horizon;2035;LPG;4000000;4000
-Horizon;2036;LPG;3900000;4000
-Horizon;2037;LPG;3800000;4000
-Horizon;2038;LPG;3700000;4000
-Horizon;2039;LPG;3600000;4000
-Horizon;2040;LPG;3500000;4000
-Horizon;2041;LPG;3400000;4000
-Horizon;2042;LPG;3300000;4000
-Horizon;2043;LPG;3200000;4000
-Horizon;2044;LPG;3100000;4000
-Horizon;2045;LPG;3000000;4000
-Horizon;2046;LPG;2900000;4000
-Horizon;2047;LPG;2800000;4000
-Horizon;2048;LPG;2700000;4000
-Horizon;2049;LPG;2600000;4000
-Horizon;2050;LPG;2500000;4000
-Horizon;2025;Green Methanol;7500000;4000
-Horizon;2026;Green Methanol;7350000;4000
-Horizon;2027;Green Methanol;7200000;4000
-Horizon;2028;Green Methanol;7050000;4000
-Horizon;2029;Green Methanol;6900000;4000
-Horizon;2030;Green Methanol;6750000;4000
-Horizon;2031;Green Methanol;6600000;4000
-Horizon;2032;Green Methanol;6450000;4000
-Horizon;2033;Green Methanol;6300000;4000
-Horizon;2034;Green Methanol;6150000;4000
-Horizon;2035;Green Methanol;6000000;4000
-Horizon;2036;Green Methanol;5850000;4000
-Horizon;2037;Green Methanol;5700000;4000
-Horizon;2038;Green Methanol;5550000;4000
-Horizon;2039;Green Methanol;5400000;4000
-Horizon;2040;Green Methanol;5250000;4000
-Horizon;2041;Green Methanol;5100000;4000
-Horizon;2042;Green Methanol;4950000;4000
-Horizon;2043;Green Methanol;4800000;4000
-Horizon;2044;Green Methanol;4650000;4000
-Horizon;2045;Green Methanol;4500000;4000
-Horizon;2046;Green Methanol;4350000;4000
-Horizon;2047;Green Methanol;4200000;4000
-Horizon;2048;Green Methanol;4050000;4000
-Horizon;2049;Green Methanol;3900000;4000
-Horizon;2050;Green Methanol;3750000;4000
-Horizon;2025;Green Ammonia;6250000;4000
-Horizon;2026;Green Ammonia;6125000;4000
-Horizon;2027;Green Ammonia;6000000;4000
-Horizon;2028;Green Ammonia;5875000;4000
-Horizon;2029;Green Ammonia;5750000;4000
-Horizon;2030;Green Ammonia;5625000;4000
-Horizon;2031;Green Ammonia;5500000;4000
-Horizon;2032;Green Ammonia;5375000;4000
-Horizon;2033;Green Ammonia;5250000;4000
-Horizon;2034;Green Ammonia;5125000;4000
-Horizon;2035;Green Ammonia;5000000;4000
-Horizon;2036;Green Ammonia;4875000;4000
-Horizon;2037;Green Ammonia;4750000;4000
-Horizon;2038;Green Ammonia;4625000;4000
-Horizon;2039;Green Ammonia;4500000;4000
-Horizon;2040;Green Ammonia;4375000;4000
-Horizon;2041;Green Ammonia;4250000;4000
-Horizon;2042;Green Ammonia;4125000;4000
-Horizon;2043;Green Ammonia;4000000;4000
-Horizon;2044;Green Ammonia;3875000;4000
-Horizon;2045;Green Ammonia;3750000;4000
-Horizon;2046;Green Ammonia;3625000;4000
-Horizon;2047;Green Ammonia;3500000;4000
-Horizon;2048;Green Ammonia;3375000;4000
-Horizon;2049;Green Ammonia;3250000;4000
-Horizon;2050;Green Ammonia;3125000;4000
+Aurora;2025;LPG;400000;1000
+Aurora;2026;LPG;395000;1000
+Aurora;2027;LPG;390000;1000
+Aurora;2028;LPG;385000;1000
+Aurora;2029;LPG;380000;1000
+Aurora;2030;LPG;375000;1000
+Aurora;2031;LPG;370000;1000
+Aurora;2032;LPG;365000;1000
+Aurora;2033;LPG;360000;1000
+Aurora;2034;LPG;355000;1000
+Aurora;2035;LPG;350000;1000
+Aurora;2036;LPG;345000;1000
+Aurora;2037;LPG;340000;1000
+Aurora;2038;LPG;335000;1000
+Aurora;2039;LPG;330000;1000
+Aurora;2040;LPG;325000;1000
+Aurora;2041;LPG;320000;1000
+Aurora;2042;LPG;315000;1000
+Aurora;2043;LPG;310000;1000
+Aurora;2044;LPG;305000;1000
+Aurora;2045;LPG;300000;1000
+Aurora;2046;LPG;295000;1000
+Aurora;2047;LPG;290000;1000
+Aurora;2048;LPG;285000;1000
+Aurora;2049;LPG;280000;1000
+Aurora;2050;LPG;275000;1000
+Aurora;2025;Green Methanol;600000;1000
+Aurora;2026;Green Methanol;590000;1000
+Aurora;2027;Green Methanol;580000;1000
+Aurora;2028;Green Methanol;570000;1000
+Aurora;2029;Green Methanol;560000;1000
+Aurora;2030;Green Methanol;550000;1000
+Aurora;2031;Green Methanol;540000;1000
+Aurora;2032;Green Methanol;530000;1000
+Aurora;2033;Green Methanol;520000;1000
+Aurora;2034;Green Methanol;510000;1000
+Aurora;2035;Green Methanol;500000;1000
+Aurora;2036;Green Methanol;490000;1000
+Aurora;2037;Green Methanol;480000;1000
+Aurora;2038;Green Methanol;470000;1000
+Aurora;2039;Green Methanol;460000;1000
+Aurora;2040;Green Methanol;450000;1000
+Aurora;2041;Green Methanol;440000;1000
+Aurora;2042;Green Methanol;430000;1000
+Aurora;2043;Green Methanol;420000;1000
+Aurora;2044;Green Methanol;410000;1000
+Aurora;2045;Green Methanol;400000;1000
+Aurora;2046;Green Methanol;390000;1000
+Aurora;2047;Green Methanol;380000;1000
+Aurora;2048;Green Methanol;370000;1000
+Aurora;2049;Green Methanol;360000;1000
+Aurora;2050;Green Methanol;350000;1000
+Aurora;2025;Green Ammonia;340000;1000
+Aurora;2026;Green Ammonia;330000;1000
+Aurora;2027;Green Ammonia;320000;1000
+Aurora;2028;Green Ammonia;310000;1000
+Aurora;2029;Green Ammonia;300000;1000
+Aurora;2030;Green Ammonia;290000;1000
+Aurora;2031;Green Ammonia;280000;1000
+Aurora;2032;Green Ammonia;270000;1000
+Aurora;2033;Green Ammonia;260000;1000
+Aurora;2034;Green Ammonia;250000;1000
+Aurora;2035;Green Ammonia;240000;1000
+Aurora;2036;Green Ammonia;230000;1000
+Aurora;2037;Green Ammonia;220000;1000
+Aurora;2038;Green Ammonia;210000;1000
+Aurora;2039;Green Ammonia;200000;1000
+Aurora;2040;Green Ammonia;190000;1000
+Aurora;2041;Green Ammonia;180000;1000
+Aurora;2042;Green Ammonia;170000;1000
+Aurora;2043;Green Ammonia;160000;1000
+Aurora;2044;Green Ammonia;150000;1000
+Aurora;2045;Green Ammonia;140000;1000
+Aurora;2046;Green Ammonia;130000;1000
+Aurora;2047;Green Ammonia;120000;1000
+Aurora;2048;Green Ammonia;110000;1000
+Aurora;2049;Green Ammonia;100000;1000
+Aurora;2050;Green Ammonia;90000;1000
+Horizon;2025;LPG;500000;4000
+Horizon;2026;LPG;490000;4000
+Horizon;2027;LPG;480000;4000
+Horizon;2028;LPG;470000;4000
+Horizon;2029;LPG;460000;4000
+Horizon;2030;LPG;450000;4000
+Horizon;2031;LPG;440000;4000
+Horizon;2032;LPG;430000;4000
+Horizon;2033;LPG;420000;4000
+Horizon;2034;LPG;410000;4000
+Horizon;2035;LPG;400000;4000
+Horizon;2036;LPG;390000;4000
+Horizon;2037;LPG;380000;4000
+Horizon;2038;LPG;370000;4000
+Horizon;2039;LPG;360000;4000
+Horizon;2040;LPG;350000;4000
+Horizon;2041;LPG;340000;4000
+Horizon;2042;LPG;330000;4000
+Horizon;2043;LPG;320000;4000
+Horizon;2044;LPG;310000;4000
+Horizon;2045;LPG;300000;4000
+Horizon;2046;LPG;290000;4000
+Horizon;2047;LPG;280000;4000
+Horizon;2048;LPG;270000;4000
+Horizon;2049;LPG;260000;4000
+Horizon;2050;LPG;250000;4000
+Horizon;2025;Green Methanol;750000;4000
+Horizon;2026;Green Methanol;740000;4000
+Horizon;2027;Green Methanol;730000;4000
+Horizon;2028;Green Methanol;720000;4000
+Horizon;2029;Green Methanol;710000;4000
+Horizon;2030;Green Methanol;700000;4000
+Horizon;2031;Green Methanol;690000;4000
+Horizon;2032;Green Methanol;680000;4000
+Horizon;2033;Green Methanol;670000;4000
+Horizon;2034;Green Methanol;660000;4000
+Horizon;2035;Green Methanol;650000;4000
+Horizon;2036;Green Methanol;640000;4000
+Horizon;2037;Green Methanol;630000;4000
+Horizon;2038;Green Methanol;620000;4000
+Horizon;2039;Green Methanol;610000;4000
+Horizon;2040;Green Methanol;600000;4000
+Horizon;2041;Green Methanol;590000;4000
+Horizon;2042;Green Methanol;580000;4000
+Horizon;2043;Green Methanol;570000;4000
+Horizon;2044;Green Methanol;560000;4000
+Horizon;2045;Green Methanol;550000;4000
+Horizon;2046;Green Methanol;540000;4000
+Horizon;2047;Green Methanol;530000;4000
+Horizon;2048;Green Methanol;520000;4000
+Horizon;2049;Green Methanol;510000;4000
+Horizon;2050;Green Methanol;500000;4000
+Horizon;2025;Green Ammonia;490000;4000
+Horizon;2026;Green Ammonia;480000;4000
+Horizon;2027;Green Ammonia;470000;4000
+Horizon;2028;Green Ammonia;460000;4000
+Horizon;2029;Green Ammonia;450000;4000
+Horizon;2030;Green Ammonia;440000;4000
+Horizon;2031;Green Ammonia;430000;4000
+Horizon;2032;Green Ammonia;420000;4000
+Horizon;2033;Green Ammonia;410000;4000
+Horizon;2034;Green Ammonia;400000;4000
+Horizon;2035;Green Ammonia;390000;4000
+Horizon;2036;Green Ammonia;380000;4000
+Horizon;2037;Green Ammonia;370000;4000
+Horizon;2038;Green Ammonia;360000;4000
+Horizon;2039;Green Ammonia;350000;4000
+Horizon;2040;Green Ammonia;340000;4000
+Horizon;2041;Green Ammonia;330000;4000
+Horizon;2042;Green Ammonia;320000;4000
+Horizon;2043;Green Ammonia;310000;4000
+Horizon;2044;Green Ammonia;300000;4000
+Horizon;2045;Green Ammonia;290000;4000
+Horizon;2046;Green Ammonia;280000;4000
+Horizon;2047;Green Ammonia;270000;4000
+Horizon;2048;Green Ammonia;260000;4000
+Horizon;2049;Green Ammonia;250000;4000
+Horizon;2050;Green Ammonia;240000;4000
 Neptun;2025;LPG;6000000;8000
 Neptun;2026;LPG;5800000;8000
 Neptun;2027;LPG;5600000;8000
