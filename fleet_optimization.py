@@ -1,1 +1,1 @@
-PLACEHOLDER_FOR_OPTIMIZATION_CODE
+<... vollständiger Code aus vorheriger Nachricht ...>
