@@ -161,7 +161,7 @@ def run_fleet_optimization(co2_prices, diesel_prices):
 st.title("🚢 Fleet Optimization Web App")
 
 # CO₂-Preis Slider (blockweise alle 5 Jahre)
-st.sidebar.header("CO₂ Price Settings (€/t)")
+st.sidebar.header("CO₂ Price Settings (USD/t)")
 slider_years = [2025, 2030, 2035, 2040, 2045, 2050]
 base_co2_prices = {
     y: st.sidebar.slider(f"CO₂ Price in {y}", 0, 1000, 100, step=50)
