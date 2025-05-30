@@ -148,7 +148,7 @@ st.title("🚢 Fleet Optimization Web App")
 st.sidebar.header("CO₂ Price Settings (€/t)")
 co2_prices = {}
 for year in [2025, 2030, 2035, 2040, 2045, 2050]:
-    co2_prices[year] = st.sidebar.slider(f"CO₂ Price in {year}", 0, 5000, 100, step=50)
+    co2_prices[year] = st.sidebar.slider(f"CO₂ Price in {year}", 0, 1000, 100, step=50)
 
 if st.sidebar.button("🔍 Run Optimization"):
     with st.spinner("Running optimization..."):
