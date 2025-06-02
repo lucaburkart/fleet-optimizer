@@ -1,4 +1,4 @@
-# app.py  –  Streamlit + PuLP (komplett linear, keine bilinearen Terme)
+# app.py  –  Streamlit + PuLP (reine LP-Version, ohne Walrus-Operator)
 # Stand: 03-Jun-2025
 
 import streamlit as st
@@ -10,14 +10,12 @@ from pulp import (
 )
 
 # ───────────────────────────────────────────────────────────────────────────────
-# Page-Config & Smoke-Test
-# ───────────────────────────────────────────────────────────────────────────────
 st.set_page_config(page_title="Fleet Optimization", layout="wide")
 st.write("✅ App geladen – UI ist aktiv")
-
+# ───────────────────────────────────────────────────────────────────────────────
 
 # ───────────────────────────────────────────────────────────────────────────────
-# 1) Optimierungs-Funktion (ohne bilineare Terme)
+# 1) Optimierungs-Funktion (ohne bilineare Terme, keine Walrus-Operatoren)
 # ───────────────────────────────────────────────────────────────────────────────
 def run_fleet_optimization(co2_prices: dict[int, float],
                            diesel_prices: dict[int, float]):
@@ -26,17 +24,25 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     diesel_prices: Dict Jahr → Diesel-Preis (USD/kg) aus Sidebar-Slider
 
     Rückgabe:
-      comp_df    → Tabelle [„Optimiert“, „Diesel-only“] und jeweilige NPV-Kosten
-      savings_df → Tabelle absolute und relative Ersparnis
-      summary_df → pro Schiff: gewähltes Retrofit-Jahr und Neubau-Jahr/Fuel
+      comp_df    → DataFrame: [„Optimiert“, „Diesel-only“] vs. NPV-Kosten
+      savings_df → DataFrame: absolute und relative Ersparnis
+      summary_df → DataFrame: pro Schiff – gewähltes Retrofit-Jahr und Neubau-Jahr/Fuel
     """
 
     BASE = Path(".")
 
-    # ─────────────────────────────────────────────────────────────────────────────
+    # ───────────────────────────────────────────────────────────────────────────
     # 1. Daten einlesen
-    # ─────────────────────────────────────────────────────────────────────────────
-    # Stelle sicher, dass alle Dateien exakt so heißen, wie hier angegeben:
+    # ───────────────────────────────────────────────────────────────────────────
+    # Achte darauf, dass die Dateien exakt so im selben Ordner liegen:
+    #   fleet_data2.1.csv
+    #   tech_fuel_data2.csv
+    #   co2_price2.1.csv
+    #   turbo_retrofit.1.csv
+    #   new_ship_cost.1.csv
+    #   new_fleet_data2.1.csv
+    #   shipping_routes.xlsx
+
     fleet     = pd.read_csv(BASE / "fleet_data2.1.csv",     delimiter=";")
     fuel      = pd.read_csv(BASE / "tech_fuel_data2.csv",   delimiter=";")
     co2_df    = pd.read_csv(BASE / "co2_price2.1.csv",      delimiter=";")
@@ -45,78 +51,75 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     new_specs = pd.read_csv(BASE / "new_fleet_data2.1.csv", delimiter=";")
     routes_df = pd.read_excel(BASE / "shipping_routes.xlsx")
 
-    # ─────────────────────────────────────────────────────────────────────────────
+    # ───────────────────────────────────────────────────────────────────────────
     # 2. String-Spalten bereinigen
-    # ─────────────────────────────────────────────────────────────────────────────
+    # ───────────────────────────────────────────────────────────────────────────
     for df in (fleet, fuel, turbo, new_cost, new_specs):
         for col in ("Ship_Type", "Fuel", "Fuel_Type"):
             if col in df.columns:
                 df[col] = df[col].astype(str).str.strip().str.title()
     routes_df["Ship"] = routes_df["Ship"].astype(str).str.strip().str.title()
 
-    # ─────────────────────────────────────────────────────────────────────────────
+    # ───────────────────────────────────────────────────────────────────────────
     # 3. Look-Up-Dictionaries aufbauen
-    # ─────────────────────────────────────────────────────────────────────────────
-    # Fuel-Lookup: fuel_lu[(year, fuel_type)] → dict mit Energy_MJ_per_kg, Price_USD_per_kg, CO2_g_per_MJ, Maintenance_USD_per_kW
+    # ───────────────────────────────────────────────────────────────────────────
+    # fuel_lu[(Year, Fuel_Type)] → { Energy_MJ_per_kg, Price_USD_per_kg, CO2_g_per_MJ, Maintenance_USD_per_kW }
     fuel_lu = fuel.set_index(["Year", "Fuel_Type"]).to_dict("index")
 
-    # CO2-Preis pro Jahr (EUR/t)  → co2_lu[year] (wir wandeln intern nicht um in USD)
+    # co2_lu[Year] = CO2_Price_EUR_per_ton
     co2_lu = co2_df.set_index("Year")["CO2_Price_EUR_per_ton"].to_dict()
 
-    # Turbo-Retrofit-Kosten & Savings
+    # Turbo-Retrofit
     T_COST = turbo.set_index(["Ship_Type", "Year"])["Retrofit_Cost_USD"].to_dict()
     T_SAVE = turbo.set_index(["Ship_Type", "Year"])["Energy_Saving_%"].to_dict()
 
-    # Neubau-Capex pro Ship_Type, Fuel, Year
+    # Neubau-Capex
     N_COST = new_cost.set_index(["Ship_Type", "Fuel", "Year"])["Capex_USD"].to_dict()
 
     # Neue Specs: Energy_per_km_new & Power_kw_new
     new_specs = new_specs.set_index("Ship_Type")
     new_lu = {
-        ship: {
-            "MJ_new": new_specs.at[ship, "Energy_per_km (MJ/km)_new"],
-            "P_new":  new_specs.at[ship, "Power_kw_new"]
-                      if "Power_kw_new" in new_specs.columns else new_specs.at[ship, "Power"]
+        s: {
+            "MJ_new": new_specs.at[s, "Energy_per_km (MJ/km)_new"],
+            "P_new":  new_specs.at[s, "Power_kw_new"]
+                      if "Power_kw_new" in new_specs.columns else new_specs.at[s, "Power"]
         }
-        for ship in new_specs.index
+        for s in new_specs.index
     }
 
-    # ─────────────────────────────────────────────────────────────────────────────
-    # 4. ERA/EC A-Anteile pro Schiff
-    # ─────────────────────────────────────────────────────────────────────────────
-    routes_df = routes_df[
-        ["Ship", "Nautical Miles", "Share of ERA", "Energy Consumption [MJ] WtW"]
-    ].dropna(subset=["Ship"])
+    # ───────────────────────────────────────────────────────────────────────────
+    # 4. ERA-/ECA-Anteile pro Schiff berechnen
+    # ───────────────────────────────────────────────────────────────────────────
+    routes_df = routes_df[[
+        "Ship", "Nautical Miles", "Share of ERA", "Energy Consumption [MJ] WtW"
+    ]].dropna(subset=["Ship"])
 
     energy_groups = {}
     for ship, grp in routes_df.groupby("Ship"):
         tot_mj     = grp["Energy Consumption [MJ] WtW"].sum()
         tot_mj_eca = (grp["Energy Consumption [MJ] WtW"] * grp["Share of ERA"]).sum()
         energy_groups[ship] = {
-            "MJ_v":    tot_mj,
-            "MJ_e":    tot_mj_eca,
-            "MJ_n":    tot_mj - tot_mj_eca,
+            "MJ_v":    tot_mj,                # total MJ pro Voyage
+            "MJ_e":    tot_mj_eca,            # MJ innerhalb ECA
+            "MJ_n":    tot_mj - tot_mj_eca,    # MJ außerhalb ECA
             "share":   (tot_mj_eca / tot_mj) if tot_mj > 0 else 0.0
         }
 
-    # ─────────────────────────────────────────────────────────────────────────────
+    # ───────────────────────────────────────────────────────────────────────────
     # 5. Parameter-Sets
-    # ─────────────────────────────────────────────────────────────────────────────
+    # ───────────────────────────────────────────────────────────────────────────
     ships      = fleet["Ship_Type"].unique()
-    YEARS_DEC  = list(range(2025, 2051, 5))     # [2025, 2030, 2035, 2040, 2045, 2050]
-    YEARS_FULL = list(range(2025, 2051))        # [2025 … 2050]
+    YEARS_DEC  = list(range(2025, 2051, 5))   # [2025, 2030, 2035, 2040, 2045, 2050]
+    YEARS_FULL = list(range(2025, 2051))      # [2025 … 2050]
     BASIC      = "Diesel"
     OTHERS     = ["Lpg", "Green Methanol", "Green Ammonia"]
     discount   = 0.07
     dfac       = lambda y: 1 / ((1 + discount) ** (y - 2025))
 
-    # ─────────────────────────────────────────────────────────────────────────────
-    # 6. Diskontierte Jahreskosten pro Schiff/Jahr berechnen (Baseline, Retrofit, Neubau)
-    # ─────────────────────────────────────────────────────────────────────────────
-    # Wir speichern:
-    #   baseline_cost[(s, y)]    = diskontiere(operativer Jahreskosten-Baseline im Jahr y)
-    #   retro_cost[(s, y)]       = diskontierte operative Retrofit-Kosten im Jahr y + diskontierter Retrofit-Capex (falls retrofit in y)
-    #   new_cost_op[(s, y, f)]   = diskontierte operative Neubau-Kosten im Jahr y + diskontierter Neubau-Capex (falls Neubau in y, Fuel f)
+    # ───────────────────────────────────────────────────────────────────────────
+    # 6. Diskontierte Jahreskosten pro Schiff/Jahr berechnen
+    #    (Baseline, operative Retrofit, operative Neubau + Capex)
+    # ───────────────────────────────────────────────────────────────────────────
     baseline_cost = {}
     retro_cost    = {}
     new_cost_op   = {}
@@ -127,50 +130,51 @@ def run_fleet_optimization(co2_prices: dict[int, float],
         P     = row["Power"]
         MJold = row.get("Energy_per_km (MJ/km)", row.get("Energy_per_km"))
 
-        e = energy_groups.get(s, {"MJ_v":0.0, "MJ_e":0.0, "MJ_n":0.0, "share":0.0})
-        MJv, MJe, MJn, share = e["MJ_v"], e["MJ_e"], e["MJ_n"], e["share"]
+        grp = energy_groups.get(s, {"MJ_v":0.0, "MJ_e":0.0, "MJ_n":0.0, "share":0.0})
+        MJv, MJe, MJn, share = grp["MJ_v"], grp["MJ_e"], grp["MJ_n"], grp["share"]
 
         MJnew = new_lu[s]["MJ_new"]
         Pnew  = new_lu[s]["P_new"]
         factor = (MJnew / MJold) if MJold else 1.0
 
+        # 6.1 Baseline-Jahreskosten
         for y in YEARS_FULL:
-            # --- Baseline: operative Jahreskosten (Fuel ECA + Fuel non-ECA + CO2 + Wartung) ---
-            # ECA (immer Diesel)
+            # 6.1.1 Fuel ECA (Diesel) 
             cost_eca = 0.0
             if MJe > 0:
                 kg_eca = (MJe * voy) / fuel_lu[(y, BASIC)]["Energy_MJ_per_kg"]
                 cost_eca = kg_eca * diesel_prices[y]
 
-            # non-ECA (immer HFO)
+            # 6.1.2 Fuel non-ECA (HFO)
             cost_noeca = 0.0
             if MJn > 0:
                 kg_no = (MJn * voy) / fuel_lu[(y, "Hfo")]["Energy_MJ_per_kg"]
                 cost_noeca = kg_no * fuel_lu[(y, "Hfo")]["Price_USD_per_kg"]
 
-            # CO2 (gemischt Diesel/HFO)
+            # 6.1.3 CO₂-Kosten (gemischt Diesel/HFO)
             co2_amt = 0.0
             if MJv > 0:
-                co2g = (
-                    (MJe * share * group_fuel_co2 := fuel_lu[(y, BASIC)]["CO2_g_per_MJ"])
-                    + (MJn * (1 - share) * fuel_lu[(y, "Hfo")]["CO2_g_per_MJ"])
-                ) * voy
+                ef_diesel = fuel_lu[(y, BASIC)]["CO2_g_per_MJ"]
+                ef_hfo    = fuel_lu[(y, "Hfo")]["CO2_g_per_MJ"]
+                co2g = MJv * voy * (share * ef_diesel + (1 - share) * ef_hfo)
                 co2_amt = (co2g / 1_000_000) * co2_prices[y]
 
-            # Wartung (gemischt Diesel/HFO)
+            # 6.1.4 Wartungskosten (gemischt Diesel/HFO)
             if MJv > 0:
                 ma = P * (
                     share * fuel_lu[(y, BASIC)]["Maintenance_USD_per_kW"]
                     + (1 - share) * fuel_lu[(y, "Hfo")]["Maintenance_USD_per_kW"]
                 )
             else:
+                # wenn keine Aktivität, Wartung nur Diesel-Basis (sicherer Fallback)
                 ma = P * fuel_lu[(y, BASIC)]["Maintenance_USD_per_kW"]
 
             baseline_cost[(s, y)] = (cost_eca + cost_noeca + co2_amt + ma) * dfac(y)
 
-            # --- Retrofit-Kosten (operativ + Capex) wenn Retrofit in y ---
+            # ───────────────────────────────────────────────────────────
+            # 6.2 Retrofit-Kosten ab Jahr y (operativ + Capex)
+            # ───────────────────────────────────────────────────────────
             save_pct = T_SAVE.get((s, y), 0) / 100
-            # reduzierte ECA/nonECA
             MJe_r = MJe * voy * (1 - save_pct)
             MJn_r = MJn * voy * (1 - save_pct)
 
@@ -183,35 +187,36 @@ def run_fleet_optimization(co2_prices: dict[int, float],
 
             co2_r = 0.0
             if MJv > 0:
-                co2g_r = (
-                    MJe_r * fuel_lu[(y, BASIC)]["CO2_g_per_MJ"]
-                    + MJn_r * fuel_lu[(y, "Hfo")]["CO2_g_per_MJ"]
-                )
+                ef_diesel = fuel_lu[(y, BASIC)]["CO2_g_per_MJ"]
+                ef_hfo    = fuel_lu[(y, "Hfo")]["CO2_g_per_MJ"]
+                co2g_r = MJe_r * ef_diesel + MJn_r * ef_hfo
                 co2_r = (co2g_r / 1_000_000) * co2_prices[y]
 
-            ma_r = ma  # Wartung bleibt gleich anteilig
+            ma_r = ma  # Wartung bleibt anteilig gleich
 
-            capex_r = 0.0
-            if (s, y) in T_COST:
-                capex_r = T_COST[(s, y)] * dfac(y)
+            capex_r = T_COST.get((s, y), 0) * dfac(y)
 
             retro_cost[(s, y)] = ((cost_eca_r + cost_noeca_r + co2_r + ma_r) * dfac(y)) + capex_r
 
-            # --- Neubau-Kosten (operativ + Capex) wenn Neubau in y, Fuel f ---
+            # ───────────────────────────────────────────────────────────
+            # 6.3 Neubau-Kosten ab Jahr y, Fuel f (operativ + Capex)
+            # ───────────────────────────────────────────────────────────
             MJv_n = MJv * voy * factor
-            MJe_n = MJe * voy * factor
-            MJn_n = MJn * voy * factor
+            MJe_n = MJn * voy * factor  # oben MJn und MJv verwechseln? Wir verwenden MJv_n nur für CO2
+            MJn_n = MJn * voy * factor  # MJn für non-ECA
 
             for f in OTHERS:
                 cost_eca_n = 0.0
-                if MJe_n > 0:
-                    cost_eca_n = (MJe_n / fuel_lu[(y, f)]["Energy_MJ_per_kg"]) * fuel_lu[(y, f)]["Price_USD_per_kg"]
+                if MJv_n > 0:
+                    cost_eca_n = (MJv_n / fuel_lu[(y, f)]["Energy_MJ_per_kg"]) * fuel_lu[(y, f)]["Price_USD_per_kg"]
 
                 cost_noeca_n = 0.0
                 if MJn_n > 0:
                     cost_noeca_n = (MJn_n / fuel_lu[(y, f)]["Energy_MJ_per_kg"]) * fuel_lu[(y, f)]["Price_USD_per_kg"]
 
-                co2_n = ( (MJe_n + MJn_n) * fuel_lu[(y, f)]["CO2_g_per_MJ"] / 1_000_000 ) * co2_prices[y]
+                # CO2 für neuen Fuel f
+                ef_f = fuel_lu[(y, f)]["CO2_g_per_MJ"]
+                co2_n = ( (MJv_n + MJn_n) * ef_f / 1_000_000 ) * co2_prices[y]
 
                 ma_n = Pnew * fuel_lu[(y, f)]["Maintenance_USD_per_kW"]
 
@@ -219,24 +224,24 @@ def run_fleet_optimization(co2_prices: dict[int, float],
 
                 new_cost_op[(s, y, f)] = ((cost_eca_n + cost_noeca_n + co2_n + ma_n) * dfac(y)) + capex_n
 
-    # ─────────────────────────────────────────────────────────────────────────────
-    # 7) Barwerte (NPV) zusammensetzen → PV_Baseline, Delta_Retrofit, Delta_New
-    # ─────────────────────────────────────────────────────────────────────────────
-    pv_base      = {s: sum(baseline_cost[(s, y)] for y in YEARS_FULL) for s in ships}
-    delta_retro  = {}
-    delta_new    = {}
+    # ───────────────────────────────────────────────────────────────────────────
+    # 7) Barwerte (NPV) berechnen: pv_base, delta_retro, delta_new
+    # ───────────────────────────────────────────────────────────────────────────
+    # pv_base[s] = Σ_{y∈YEARS_FULL} baseline_cost[(s,y)]
+    pv_base = {s: sum(baseline_cost[(s, y)] for y in YEARS_FULL) for s in ships}
 
-    # Delta_Retrofit: ab y0 kostet das Schiff retro_cost statt baseline_cost
+    # delta_retro[(s,y0)] = Σ_{y≥y0} [ retro_cost[(s,y)] - baseline_cost[(s,y)] ]
+    delta_retro = {}
     for s in ships:
         for y0 in YEARS_DEC:
-            # Differenz für alle Jahre y >= y0
             diff_sum = sum(
                 (retro_cost[(s, y)] - baseline_cost[(s, y)])
                 for y in YEARS_FULL if y >= y0
             )
             delta_retro[(s, y0)] = diff_sum
 
-    # Delta_New: ab y0 kostet das Schiff new_cost_op statt baseline_cost
+    # delta_new[(s, y0, f)] = Σ_{y≥y0} [ new_cost_op[(s,y,f)] - baseline_cost[(s,y)] ]
+    delta_new = {}
     for s in ships:
         for y0 in YEARS_DEC:
             for f in OTHERS:
@@ -246,38 +251,36 @@ def run_fleet_optimization(co2_prices: dict[int, float],
                 )
                 delta_new[(s, y0, f)] = diff_sum
 
-    # ─────────────────────────────────────────────────────────────────────────────
-    # 8) MILP aufsetzen (alle Terme sind jetzt linear)
-    # ─────────────────────────────────────────────────────────────────────────────
+    # ───────────────────────────────────────────────────────────────────────────
+    # 8) MILP-Modell aufsetzen (jetzt rein linear)
+    # ───────────────────────────────────────────────────────────────────────────
     mdl = LpProblem("Fleet_Optimization", LpMinimize)
 
-    # Entscheidungsvariablen:
-    t = LpVariable.dicts("Turbo", [
-        (s, y) for s in ships for y in YEARS_DEC
-    ], cat=LpBinary)
-    n = LpVariable.dicts("New", [
-        (s, y, f) for s in ships for y in YEARS_DEC for f in OTHERS
-    ], cat=LpBinary)
+    # 8.1) Entscheidungsvariablen: t[s,y] ∈ {0,1}, n[s,y,f] ∈ {0,1}
+    t = LpVariable.dicts("Turbo", [(s, y) for s in ships for y in YEARS_DEC], cat=LpBinary)
+    n = LpVariable.dicts("New",   [(s, y, f) for s in ships for y in YEARS_DEC for f in OTHERS], cat=LpBinary)
 
-    # 8.1) Constraints: je Schiff max. 1 Retrofit, max. 1 Neubau, kein Retrofit nach Neubau
+    # 8.2) Constraints:
     for s in ships:
+        # max 1 Retrofit
         mdl += lpSum(t[(s, y)] for y in YEARS_DEC) <= 1
+        # max 1 Neubau
         mdl += lpSum(n[(s, y, f)] for y in YEARS_DEC for f in OTHERS) <= 1
         for y in YEARS_DEC:
+            # kein Turbo-After-New: t[s,y] ≤ 1 - Σ_{yy≤y,f} n[s,yy,f]
             mdl += (
                 t[(s, y)]
                 <= 1
-                - lpSum(
-                    n[(s, yy, f)]
-                    for yy in YEARS_DEC if yy <= y
-                    for f in OTHERS
-                )
+                - lpSum(n[(s, yy, f)] for yy in YEARS_DEC if yy <= y for f in OTHERS)
             )
 
-    # 8.2) Zielfunktion = Σ PV_Baseline + Σ Delta_Retrofit * t + Σ Delta_New * n
+    # 8.3) Zielfunktion:
     mdl += (
+        # Baseline-Beitrag (konstant)
         lpSum(pv_base[s] for s in ships)
+        # + Σ Δ_Retro[s,y]*t[s,y]
         + lpSum(delta_retro[(s, y)] * t[(s, y)] for s in ships for y in YEARS_DEC)
+        # + Σ Δ_New[s,y,f]*n[s,y,f]
         + lpSum(delta_new[(s, y, f)] * n[(s, y, f)]
                 for s in ships for y in YEARS_DEC for f in OTHERS)
     )
@@ -287,9 +290,9 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     if mdl.status != LpStatusOptimal:
         raise RuntimeError(f"Modell nicht optimal (Status {mdl.status})")
 
-    # ─────────────────────────────────────────────────────────────────────────────
+    # ───────────────────────────────────────────────────────────────────────────
     # 9) Ergebnis-Reporting
-    # ─────────────────────────────────────────────────────────────────────────────
+    # ───────────────────────────────────────────────────────────────────────────
     obj_opt  = value(mdl.objective)
     obj_base = sum(pv_base[s] for s in ships)
 
@@ -304,9 +307,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
 
     summary = []
     for s in ships:
-        # gewähltes Turbo-Jahr (falls Variable t[(s,y)] == 1)
         ty = next((y for y in YEARS_DEC if value(t[(s, y)]) > 0.5), None)
-        # gewählte Neubau-Kombi (y,f)
         chosen = [(y, f) for y in YEARS_DEC for f in OTHERS if value(n[(s, y, f)]) > 0.5]
         if chosen:
             ny, fuel_choice = chosen[0]
