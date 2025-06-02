@@ -14,37 +14,43 @@ from pulp import (
 )
 
 # ————————————————
-# Page config must come first
+# Page config muss ganz oben stehen
 st.set_page_config(page_title="Fleet Optimization", layout="wide")
 # ————————————————
 
 st.write("✅ App lädt – UI ist aktiv")
 
 # ---------------------------------------------------------------------------------------------------
-# 1) PuLP-based optimization function (formerly in fleet_optimization.py)
+# 1) PuLP-basierte Optimierungsfunktion (inkl. Datenimport)
 # ---------------------------------------------------------------------------------------------------
 def run_fleet_optimization(cf_co2_prices, cf_diesel_prices):
     """
-    cf_co2_prices: dict mapping year → CO₂ price (USD/t)
-    cf_diesel_prices: dict mapping year → Diesel price (USD/kg)
-
-    Returns:
-      comp_df    → DataFrame with two rows: [Optimiert, Diesel-only] costs
-      savings_df → DataFrame showing absolute and relative savings
-      summary_df → DataFrame with each ship’s chosen Turbo year and New year/fuel
+    cf_co2_prices: dict Jahr → CO₂-Preis (USD/t)
+    cf_diesel_prices: dict Jahr → Diesel-Preis (USD/kg)
+    Rückgabe: (comp_df, savings_df, summary_df)
     """
     BASE_PATH = Path(".")
 
-    # 1) Daten einlesen
-    fleet     = pd.read_csv(BASE_PATH / "fleet_data2.csv",     delimiter=";")
-    fuel      = pd.read_csv(BASE_PATH / "tech_fuel_data2.csv", delimiter=";")
-    co2_df    = pd.read_csv(BASE_PATH / "co2_price2.csv",       delimiter=";")
-    turbo     = pd.read_csv(BASE_PATH / "turbo_retrofit.csv",   delimiter=";")
-    new_cost  = pd.read_csv(BASE_PATH / "new_ship_cost.csv",    delimiter=";")
-    new_specs = pd.read_csv(BASE_PATH / "new_fleet_data2.csv",  delimiter=";")
+    # ─── 1) Daten einlesen ───
+    # Achte darauf, dass die folgenden Dateien im selben Verzeichnis wie app.py liegen:
+    #   ‣ fleet_data2.1.csv
+    #   ‣ tech_fuel_data2.csv
+    #   ‣ co2_price2.1.csv
+    #   ‣ turbo_retrofit.1.csv
+    #   ‣ new_ship_cost.1.csv
+    #   ‣ new_fleet_data2.1.csv
+    #   ‣ shipping_routes.xlsx
+
+    fleet     = pd.read_csv(BASE_PATH / "fleet_data2.1.csv",     delimiter=";")
+    # Hier benutzen wir tech_fuel_data2.csv (ohne .1)
+    fuel      = pd.read_csv(BASE_PATH / "tech_fuel_data2.csv",   delimiter=";")
+    co2_df    = pd.read_csv(BASE_PATH / "co2_price2.1.csv",       delimiter=";")
+    turbo     = pd.read_csv(BASE_PATH / "turbo_retrofit.1.csv",   delimiter=";")
+    new_cost  = pd.read_csv(BASE_PATH / "new_ship_cost.1.csv",    delimiter=";")
+    new_specs = pd.read_csv(BASE_PATH / "new_fleet_data2.1.csv",  delimiter=";")
     routes_df = pd.read_excel(BASE_PATH / "shipping_routes.xlsx")
 
-    # 2) String-Spalten normalisieren
+    # ─── 2) String-Spalten normalisieren ───
     for df in (fleet, fuel, turbo, new_cost, new_specs):
         for col in ("Ship_Type", "Fuel", "Fuel_Type"):
             if col in df.columns:
@@ -52,7 +58,7 @@ def run_fleet_optimization(cf_co2_prices, cf_diesel_prices):
 
     routes_df["Ship"] = routes_df["Ship"].astype(str).str.strip().str.title()
 
-    # 3) Lookup-Tabellen aufbauen
+    # ─── 3) Lookup-Tabellen aufbauen ───
     fuel_lu = fuel.set_index(["Year", "Fuel_Type"]).to_dict("index")
     co2_lu  = co2_df.set_index("Year")["CO2_Price_EUR_per_ton"].to_dict()
     T_COST  = turbo.set_index(["Ship_Type", "Year"])["Retrofit_Cost_USD"].to_dict()
@@ -69,8 +75,10 @@ def run_fleet_optimization(cf_co2_prices, cf_diesel_prices):
         for ship, row in fleet_new_df.iterrows()
     }
 
-    # 4) „Share of ERA“ pro Schiff berechnen
-    routes_df = routes_df[["Ship", "Nautical Miles", "Share of ERA", "Energy Consumption [MJ] WtW"]].dropna(subset=["Ship"])
+    # ─── 4) „Share of ERA“ pro Schiff berechnen ───
+    routes_df = routes_df[
+        ["Ship", "Nautical Miles", "Share of ERA", "Energy Consumption [MJ] WtW"]
+    ].dropna(subset=["Ship"])
     energy_groups = {}
     for ship, grp in routes_df.groupby("Ship"):
         tot_mj       = grp["Energy Consumption [MJ] WtW"].sum()
@@ -85,7 +93,7 @@ def run_fleet_optimization(cf_co2_prices, cf_diesel_prices):
             "share_era":                  share_era
         }
 
-    # 5) Modell-Parameter
+    # ─── 5) Modell-Parameter ───
     ships         = fleet["Ship_Type"].unique()
     YEARS_DEC     = list(range(2025, 2051, 5))  # [2025, 2030, 2035, 2040, 2045, 2050]
     YEARS_FULL    = list(range(2025, 2051))     # [2025..2050]
@@ -94,7 +102,7 @@ def run_fleet_optimization(cf_co2_prices, cf_diesel_prices):
     discount_rate = 0.07
     dfac          = lambda y: 1 / ((1 + discount_rate) ** (y - 2025))
 
-    # 6) Operative Kosten berechnen (Baseline, Retrofit, Neubau)
+    # ─── 6) Operative Kosten berechnen (Baseline, Retrofit, Neubau) ───
     baseline_cost = {}
     retro_cost    = {}
     new_op_cost   = {}
@@ -128,7 +136,7 @@ def run_fleet_optimization(cf_co2_prices, cf_diesel_prices):
             ann_mj_eca   = energy_eca_voyage * voy
             ann_mj_noeca = energy_noeca_voyage * voy
 
-            # --- Baseline-Kosten (Fuel ECA, Fuel non-ECA, CO2, Wartung) ---
+            # --- Baseline-Kosten (Fuel ECA, Fuel non-ECA, CO₂, Wartung) ---
             # 1) Fuel ECA (immer Diesel, override mit cf_diesel_prices[y])
             cost_eca = 0.0
             if ann_mj_eca > 1e-9:
@@ -178,8 +186,8 @@ def run_fleet_optimization(cf_co2_prices, cf_diesel_prices):
 
             co2_retro = 0.0
             if ann_mj > 1e-9:
-                ef_diesel = fuel_lu[(y, BASIC)]["CO2_g_per_MJ"]
-                ef_hfo    = fuel_lu[(y, "Hfo")]["CO2_g_per_MJ"]
+                ef_diesel  = fuel_lu[(y, BASIC)]["CO2_g_per_MJ"]
+                ef_hfo     = fuel_lu[(y, "Hfo")]["CO2_g_per_MJ"]
                 co2t_retro = (ann_mj_eca_retro * ef_diesel + ann_mj_noeca_retro * ef_hfo) / 1_000_000
                 co2_retro  = co2t_retro * cf_co2_prices.get(y, 0)
 
@@ -196,7 +204,9 @@ def run_fleet_optimization(cf_co2_prices, cf_diesel_prices):
                 inv_retro = T_COST[(s, y)] * dfac(y)
 
             # operative Retrofit-Kosten + Capex (diskontiert)
-            retro_cost[(s, y)] = ((cost_eca_retro + cost_noeca_retro + co2_retro + ma_retro) * dfac(y)) + inv_retro
+            retro_cost[(s, y)] = (
+                (cost_eca_retro + cost_noeca_retro + co2_retro + ma_retro) * dfac(y)
+            ) + inv_retro
 
             # --- Neubau-Kosten (Fuel, CO₂, Wartung, Capex) mit neuen Specs ---
             energy_new_voyage       = energy_voyage       * factor_new_to_old
@@ -234,12 +244,13 @@ def run_fleet_optimization(cf_co2_prices, cf_diesel_prices):
                 if (s, f, y) in N_COST:
                     inv_new = N_COST[(s, f, y)] * dfac(y)
 
-                new_op_cost[(s, y, f)] = ((costn_eca + costn_noeca_f + co2_new + ma_new_f) * dfac(y)) + inv_new
+                new_op_cost[(s, y, f)] = (
+                    (costn_eca + costn_noeca_f + co2_new + ma_new_f) * dfac(y)
+                ) + inv_new
 
-    # 7) MIP-Modell mit PuLP definieren
+    # ─── 7) MIP-Modell mit PuLP definieren ───
     mdl = LpProblem("Fleet_Optimization_NoDemand", LpMinimize)
 
-    # Entscheidungsvariablen: t[s,y] ∈ {0,1}, n[s,y,f] ∈ {0,1}
     t = LpVariable.dicts(
         "Turbo",
         [(s, y) for s in ships for y in YEARS_DEC],
@@ -282,11 +293,8 @@ def run_fleet_optimization(cf_co2_prices, cf_diesel_prices):
             retro_active = cum_retro * (1 - cum_new)
             new_active   = cum_new
 
-            # a) Baseline-Kosten (diskontiert)
             obj_terms.append(baseline_cost[(s, y)] * base_active)
-            # b) Retrofit-Kosten (diskontiert + Capex)
             obj_terms.append(retro_cost[(s, y)]   * retro_active)
-            # c) Neubau-Kosten (diskontiert + Capex)
             for f in OTHERS:
                 obj_terms.append(new_op_cost[(s, y, f)] * new_active)
 
@@ -333,8 +341,9 @@ def run_fleet_optimization(cf_co2_prices, cf_diesel_prices):
     else:
         raise RuntimeError(f"Optimierung nicht optimal gelöst (Status {mdl.status})")
 
+
 # ---------------------------------------------------------------------------------------------------
-# 2) Streamlit-UI (dieser Teil bleibt unverändert)
+# 2) Streamlit-UI (Sliders + Button)
 # ---------------------------------------------------------------------------------------------------
 
 # CO₂-Preis Slider (blockweise alle 5 Jahre)
