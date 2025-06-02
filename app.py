@@ -1,4 +1,4 @@
-# app.py  –  Streamlit + PuLP (inkl. HFO-Preisslider)
+# app.py  –  Streamlit + PuLP (mit CO₂, Diesel & HFO Slidern)
 # Stand: 03-Jun-2025
 
 import streamlit as st
@@ -56,20 +56,12 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     # ───────────────────────────────────────────────────────────────────────────
     # 3. Look-Up-Dictionaries aufbauen
     # ───────────────────────────────────────────────────────────────────────────
-    # Fuel-Lookup: fuel_lu[(Year, Fuel_Type)] → {Energy_MJ_per_kg, Price_USD_per_kg, CO2_g_per_MJ, Maintenance_USD_per_kW}
     fuel_lu = fuel.set_index(["Year", "Fuel_Type"]).to_dict("index")
+    co2_lu  = co2_df.set_index("Year")["CO2_Price_EUR_per_ton"].to_dict()
+    T_COST  = turbo.set_index(["Ship_Type", "Year"])["Retrofit_Cost_USD"].to_dict()
+    T_SAVE  = turbo.set_index(["Ship_Type", "Year"])["Energy_Saving_%"].to_dict()
+    N_COST  = new_cost.set_index(["Ship_Type", "Fuel", "Year"])["Capex_USD"].to_dict()
 
-    # CO2-Preis pro Jahr (EUR/t)
-    co2_lu = co2_df.set_index("Year")["CO2_Price_EUR_per_ton"].to_dict()
-
-    # Turbo-Retrofit-Kosten & Savings
-    T_COST = turbo.set_index(["Ship_Type", "Year"])["Retrofit_Cost_USD"].to_dict()
-    T_SAVE = turbo.set_index(["Ship_Type", "Year"])["Energy_Saving_%"].to_dict()
-
-    # Neubau-Capex
-    N_COST = new_cost.set_index(["Ship_Type", "Fuel", "Year"])["Capex_USD"].to_dict()
-
-    # Neue Specs: Energy_per_km_new & Power_kw_new
     new_specs = new_specs.set_index("Ship_Type")
     new_lu = {
         s: {
@@ -102,8 +94,8 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     # 5. Parameter-Sets
     # ───────────────────────────────────────────────────────────────────────────
     ships      = fleet["Ship_Type"].unique()
-    YEARS_DEC  = list(range(2025, 2051, 5))   # [2025, 2030, 2035, 2040, 2045, 2050]
-    YEARS_FULL = list(range(2025, 2051))      # [2025 … 2050]
+    YEARS_DEC  = list(range(2025, 2051, 5))
+    YEARS_FULL = list(range(2025, 2051))
     BASIC      = "Diesel"
     OTHERS     = ["Lpg", "Green Methanol", "Green Ammonia"]
     discount   = 0.07
@@ -132,19 +124,19 @@ def run_fleet_optimization(co2_prices: dict[int, float],
 
         # 6.1 Baseline-Jahreskosten
         for y in YEARS_FULL:
-            # 6.1.1 Fuel ECA (Diesel)
+            # Fuel ECA (Diesel)
             cost_eca = 0.0
             if MJe > 0:
                 kg_eca = (MJe * voy) / fuel_lu[(y, BASIC)]["Energy_MJ_per_kg"]
                 cost_eca = kg_eca * diesel_prices[y]
 
-            # 6.1.2 Fuel non-ECA (HFO) – jetzt aus hfo_prices statt CSV-Preis
+            # Fuel non-ECA (HFO) – jetzt aus hfo_prices statt CSV
             cost_noeca = 0.0
             if MJn > 0:
                 kg_no = (MJn * voy) / fuel_lu[(y, "Hfo")]["Energy_MJ_per_kg"]
                 cost_noeca = kg_no * hfo_prices[y]
 
-            # 6.1.3 CO₂-Kosten (gemischt Diesel/HFO)
+            # CO₂-Kosten (gemischt Diesel/HFO)
             co2_amt = 0.0
             if MJv > 0:
                 ef_diesel = fuel_lu[(y, BASIC)]["CO2_g_per_MJ"]
@@ -152,7 +144,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
                 co2g = MJv * voy * (share * ef_diesel + (1 - share) * ef_hfo)
                 co2_amt = (co2g / 1_000_000) * co2_prices[y]
 
-            # 6.1.4 Wartungskosten (gemischt Diesel/HFO)
+            # Wartungskosten (gemischt Diesel/HFO)
             if MJv > 0:
                 ma = P * (
                     share * fuel_lu[(y, BASIC)]["Maintenance_USD_per_kW"]
@@ -309,7 +301,7 @@ YE_REF = [2025, 2030, 2035, 2040, 2045, 2050]
 
 # CO₂-Preis Slider
 st.sidebar.header("CO₂-Preis (USD/t)")
-co2_ref = {y: st.sidebar.slider(str(y), 0, 1000, 100, 50) for y in YE_REF}
+co2_ref = {y: st.sidebar.slider(f"CO₂ Price in {y}", 0, 1000, 100, 50) for y in YE_REF}
 co2_prices = {
     y: co2_ref[max(k for k in YE_REF if k <= y)]
     for y in range(2025, 2051)
@@ -317,7 +309,7 @@ co2_prices = {
 
 # Diesel-Preis Slider
 st.sidebar.header("Diesel-Preis (USD/kg)")
-diesel_ref = {y: st.sidebar.slider(str(y), 0.0, 10.0, 1.0, 0.5) for y in YE_REF}
+diesel_ref = {y: st.sidebar.slider(f"Diesel Price in {y}", 0.0, 10.0, 1.0, 0.5) for y in YE_REF}
 diesel_prices = {
     y: diesel_ref[max(k for k in YE_REF if k <= y)]
     for y in range(2025, 2051)
@@ -325,7 +317,7 @@ diesel_prices = {
 
 # HFO-Preis Slider
 st.sidebar.header("HFO-Preis (USD/kg)")
-hfo_ref = {y: st.sidebar.slider(str(y), 0.0, 10.0, 1.0, 0.5) for y in YE_REF}
+hfo_ref = {y: st.sidebar.slider(f"HFO Price in {y}", 0.0, 10.0, 1.0, 0.5) for y in YE_REF}
 hfo_prices = {
     y: hfo_ref[max(k for k in YE_REF if k <= y)]
     for y in range(2025, 2051)
