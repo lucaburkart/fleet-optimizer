@@ -1,4 +1,4 @@
-# app.py  –  Streamlit + PuLP (mit CO₂, Diesel & HFO Slidern)
+# app.py  –  Streamlit + PuLP (inkl. CO₂, Diesel & HFO mit 0–1.5-Bereich)
 # Stand: 03-Jun-2025
 
 import streamlit as st
@@ -84,9 +84,9 @@ def run_fleet_optimization(co2_prices: dict[int, float],
         tot_mj     = grp["Energy Consumption [MJ] WtW"].sum()
         tot_mj_eca = (grp["Energy Consumption [MJ] WtW"] * grp["Share of ERA"]).sum()
         energy_groups[ship] = {
-            "MJ_v":    tot_mj,                # total MJ pro Voyage
-            "MJ_e":    tot_mj_eca,            # MJ innerhalb ECA
-            "MJ_n":    tot_mj - tot_mj_eca,    # MJ außerhalb ECA
+            "MJ_v":    tot_mj,
+            "MJ_e":    tot_mj_eca,
+            "MJ_n":    tot_mj - tot_mj_eca,
             "share":   (tot_mj_eca / tot_mj) if tot_mj > 0 else 0.0
         }
 
@@ -124,19 +124,19 @@ def run_fleet_optimization(co2_prices: dict[int, float],
 
         # 6.1 Baseline-Jahreskosten
         for y in YEARS_FULL:
-            # Fuel ECA (Diesel)
+            # 6.1.1 Fuel ECA (Diesel)
             cost_eca = 0.0
             if MJe > 0:
                 kg_eca = (MJe * voy) / fuel_lu[(y, BASIC)]["Energy_MJ_per_kg"]
                 cost_eca = kg_eca * diesel_prices[y]
 
-            # Fuel non-ECA (HFO) – jetzt aus hfo_prices statt CSV
+            # 6.1.2 Fuel non-ECA (HFO) – wird aus hfo_prices bezogen
             cost_noeca = 0.0
             if MJn > 0:
                 kg_no = (MJn * voy) / fuel_lu[(y, "Hfo")]["Energy_MJ_per_kg"]
                 cost_noeca = kg_no * hfo_prices[y]
 
-            # CO₂-Kosten (gemischt Diesel/HFO)
+            # 6.1.3 CO₂-Kosten (gemischt Diesel/HFO)
             co2_amt = 0.0
             if MJv > 0:
                 ef_diesel = fuel_lu[(y, BASIC)]["CO2_g_per_MJ"]
@@ -144,7 +144,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
                 co2g = MJv * voy * (share * ef_diesel + (1 - share) * ef_hfo)
                 co2_amt = (co2g / 1_000_000) * co2_prices[y]
 
-            # Wartungskosten (gemischt Diesel/HFO)
+            # 6.1.4 Wartungskosten (gemischt Diesel/HFO)
             if MJv > 0:
                 ma = P * (
                     share * fuel_lu[(y, BASIC)]["Maintenance_USD_per_kW"]
@@ -176,7 +176,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
                 co2g_r = MJe_r * ef_diesel + MJn_r * ef_hfo
                 co2_r = (co2g_r / 1_000_000) * co2_prices[y]
 
-            ma_r = ma  # Wartung bleibt gleich
+            ma_r = ma
 
             capex_r = T_COST.get((s, y), 0) * dfac(y)
 
@@ -200,7 +200,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
                 ef_f = fuel_lu[(y, f)]["CO2_g_per_MJ"]
                 co2_n = ((MJv_n + MJn_n) * ef_f / 1_000_000) * co2_prices[y]
 
-                ma_n = Pnew * fuel_lu[(y, f)]["Maintenance_USD_per_kW"]
+                ma_n = new_lu[s]["P_new"] * fuel_lu[(y, f)]["Maintenance_USD_per_kW"]
 
                 capex_n = N_COST.get((s, f, y), 0) * dfac(y)
 
@@ -315,9 +315,9 @@ diesel_prices = {
     for y in range(2025, 2051)
 }
 
-# HFO-Preis Slider
+# HFO-Preis Slider (nun 0.0–1.5 USD/kg)
 st.sidebar.header("HFO-Preis (USD/kg)")
-hfo_ref = {y: st.sidebar.slider(f"HFO Price in {y}", 0.0, 10.0, 1.0, 0.5) for y in YE_REF}
+hfo_ref = {y: st.sidebar.slider(f"HFO Price in {y}", 0.0, 1.5, 1.0, 0.1) for y in YE_REF}
 hfo_prices = {
     y: hfo_ref[max(k for k in YE_REF if k <= y)]
     for y in range(2025, 2051)
