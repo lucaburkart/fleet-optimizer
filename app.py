@@ -1,5 +1,5 @@
-# app.py  –  Streamlit + PuLP (inkl. CO₂, Diesel & HFO mit 0–1.5-Bereich)
-# Stand: 04-Jun-2025 (mit CO₂-Emissions-Berechnung für die optimierte Lösung)
+# app.py  –  Streamlit + PuLP (inkl. vereinfachtem CO₂-Vergleich aggregiert)
+# Stand: 04-Jun-2025 (aktualisiert: nur Gesamtemissionen vergleichen)
 
 import streamlit as st
 import pandas as pd
@@ -15,7 +15,7 @@ st.write("✅ App geladen – UI ist aktiv")
 # ───────────────────────────────────────────────────────────────────────────────
 
 # ───────────────────────────────────────────────────────────────────────────────
-# 1) Optimierungs-Funktion (inkl. CO₂-Emissionen für die optimierte Lösung)
+# 1) Optimierungs-Funktion (mit aggregiertem CO₂-Vergleich)
 # ───────────────────────────────────────────────────────────────────────────────
 def run_fleet_optimization(co2_prices: dict[int, float],
                            diesel_prices: dict[int, float],
@@ -29,7 +29,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
       comp_df      → DataFrame: [„Optimiert“, „Diesel-only“] vs. NPV-Kosten
       savings_df   → DataFrame: absolute und relative Ersparnis
       summary_df   → DataFrame: pro Schiff – gewähltes Retrofit-Jahr und Neubau-Jahr/Fuel
-      co2_df_opt   → DataFrame: CO₂-Emissionen (t) pro Schiff pro Jahr in der optimierten Lösung
+      co2_compare  → DataFrame: Gesamte CO₂-Emissionen optimiert vs. Baseline (t)
     """
 
     BASE = Path(".")
@@ -178,9 +178,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
                 co2_r = (co2g_r / 1_000_000) * co2_prices[y]
 
             ma_r = ma
-
             capex_r = T_COST.get((s, y), 0) * dfac(y)
-
             retro_cost[(s, y)] = ((cost_eca_r + cost_noeca_r + co2_r + ma_r) * dfac(y)) + capex_r
 
             # ────────────────────────────────────────────────────────
@@ -202,7 +200,6 @@ def run_fleet_optimization(co2_prices: dict[int, float],
                 co2_n = ((MJv_n + MJn_n) * ef_f / 1_000_000) * co2_prices[y]
 
                 ma_n = new_lu[s]["P_new"] * fuel_lu[(y, f)]["Maintenance_USD_per_kW"]
-
                 capex_n = N_COST.get((s, f, y), 0) * dfac(y)
 
                 new_cost_op[(s, y, f)] = ((cost_eca_n + cost_noeca_n + co2_n + ma_n) * dfac(y)) + capex_n
@@ -262,7 +259,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
         raise RuntimeError(f"Modell nicht optimal (Status {mdl.status})")
 
     # ───────────────────────────────────────────────────────────────────────────
-    # 9) Ergebnis-Reporting
+    # 9) Ergebnis-Reporting (Kosten & Entscheidungen)
     # ───────────────────────────────────────────────────────────────────────────
     obj_opt  = value(mdl.objective)
     obj_base = sum(pv_base[s] for s in ships)
@@ -277,7 +274,6 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     })
 
     summary = []
-    # Speichere Retrofit- und Neubau-Entscheidungen
     decisions = {}
     for s in ships:
         ty = next((y for y in YEARS_DEC if value(t[(s, y)]) > 0.5), None)
@@ -297,9 +293,11 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     summary_df = pd.DataFrame(summary)
 
     # ───────────────────────────────────────────────────────────────────────────
-    # 10) CO₂-Emissionen der optimierten Lösung berechnen
+    # 10) Aggregierte CO₂-Emissionen berechnen: Optimiert vs. Baseline
     # ───────────────────────────────────────────────────────────────────────────
-    co2_records = []
+    total_co2_opt = 0.0
+    total_co2_base = 0.0
+
     for s in ships:
         row = fleet.loc[fleet.Ship_Type == s].iloc[0]
         voy   = row["Voyages"]
@@ -309,7 +307,6 @@ def run_fleet_optimization(co2_prices: dict[int, float],
         MJe = grp["MJ_e"]
         MJn = grp["MJ_n"]
         MJv = grp["MJ_v"]
-        # Faktor für „new build“-MJ
         factor = (new_lu[s]["MJ_new"] / MJold) if MJold else 1.0
 
         retrofit_year = decisions[s]["retro_year"]
@@ -317,38 +314,42 @@ def run_fleet_optimization(co2_prices: dict[int, float],
         new_fuel      = decisions[s]["new_fuel"]
 
         for y in YEARS_FULL:
+            # ── Baseline-CO₂ (immer Alte Flotte, Diesel/HFO) ───────────────
+            ef_db = fuel_lu[(y, "Diesel")]["CO2_g_per_MJ"]
+            ef_hb = fuel_lu[(y, "Hfo")]   ["CO2_g_per_MJ"]
+            co2g_base = MJe * voy * ef_db + MJn * voy * ef_hb
+            total_co2_base += co2g_base / 1_000_000
+
+            # ── Optimierte CO₂ (abhängig von Retrofit/Neubau) ─────────────
             if new_year is not None and y >= new_year:
-                # Neubau mit Fuel new_fuel
+                # Neubau mit new_fuel
                 MJe_n = MJe * voy * factor
                 MJn_n = MJn * voy * factor
-                ef_f = fuel_lu[(y, new_fuel)]["CO2_g_per_MJ"]
-                co2g = (MJe_n + MJn_n) * ef_f
-                co2_t = co2g / 1_000_000
+                ef_fn = fuel_lu[(y, new_fuel)]["CO2_g_per_MJ"]
+                co2g_opt = (MJe_n + MJn_n) * ef_fn
             elif retrofit_year is not None and y >= retrofit_year:
-                # Retrofit – gleiche Diesel/HFO, aber sparender
+                # Retrofit reduziert MJe/MJn
                 save_pct = T_SAVE.get((s, retrofit_year), 0) / 100
                 MJe_r = MJe * voy * (1 - save_pct)
                 MJn_r = MJn * voy * (1 - save_pct)
-                ef_d = fuel_lu[(y, "Diesel")]["CO2_g_per_MJ"]
-                ef_h = fuel_lu[(y, "Hfo")]   ["CO2_g_per_MJ"]
-                co2g = MJe_r * ef_d + MJn_r * ef_h
-                co2_t = co2g / 1_000_000
+                ef_dr = fuel_lu[(y, "Diesel")]["CO2_g_per_MJ"]
+                ef_hr = fuel_lu[(y, "Hfo")]   ["CO2_g_per_MJ"]
+                co2g_opt = MJe_r * ef_dr + MJn_r * ef_hr
             else:
-                # Baseline (keine Änderung): Diesel/HFO
-                ef_d = fuel_lu[(y, "Diesel")]["CO2_g_per_MJ"]
-                ef_h = fuel_lu[(y, "Hfo")]   ["CO2_g_per_MJ"]
-                co2g = MJe * voy * ef_d + MJn * voy * ef_h
-                co2_t = co2g / 1_000_000
+                # Keine Maßnahme: Baseline-Verbrauch
+                co2g_opt = MJe * voy * fuel_lu[(y, "Diesel")]["CO2_g_per_MJ"] \
+                         + MJn * voy * fuel_lu[(y, "Hfo")]   ["CO2_g_per_MJ"]
 
-            co2_records.append({
-                "Ship": s,
-                "Year": y,
-                "CO2_t": co2_t
-            })
+            total_co2_opt += co2g_opt / 1_000_000
 
-    co2_df_opt = pd.DataFrame(co2_records)
+    # DataFrame für den direkten Vergleich
+    co2_compare = pd.DataFrame({
+        "Variante": ["Optimiert", "Nur Diesel/HFO"],
+        "CO2 gesamt (t)": [total_co2_opt, total_co2_base],
+        "Ersparnis (t)":  [total_co2_base - total_co2_opt, 0.0]
+    })
 
-    return comp_df, savings_df, summary_df, co2_df_opt
+    return comp_df, savings_df, summary_df, co2_compare
 
 
 # ───────────────────────────────────────────────────────────────────────────────
@@ -382,7 +383,7 @@ hfo_prices = {
 
 if st.sidebar.button("🔍 Run Optimization"):
     with st.spinner("Berechne optimale Flotte…"):
-        comp_df, savings_df, summary_df, co2_df_opt = run_fleet_optimization(
+        comp_df, savings_df, summary_df, co2_compare = run_fleet_optimization(
             co2_prices, diesel_prices, hfo_prices
         )
     st.success("Fertig!")
@@ -396,5 +397,8 @@ if st.sidebar.button("🔍 Run Optimization"):
     st.subheader("🚢 Flotten-Entscheidungen")
     st.dataframe(summary_df)
 
-    st.subheader("🌍 CO₂-Emissionen der optimierten Lösung (t/Jahr)")
-    st.dataframe(co2_df_opt.style.format({"CO2_t": "{:.2f}"}))
+    st.subheader("🌍 Aggregierter CO₂-Vergleich (2025–2050)")
+    st.dataframe(
+        co2_compare
+        .style.format({"CO2 gesamt (t)": "{:,.0f}", "Ersparnis (t)": "{:,.0f}"})
+    )
