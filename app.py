@@ -19,6 +19,7 @@ st.write("✅ App geladen – UI ist aktiv")
 # 2) Daten einlesen (globale DataFrames)
 # ───────────────────────────────────────────────────────────────────────────────
 BASE = Path(".")
+
 fleet     = pd.read_csv(BASE / "fleet_data2.1.csv",     delimiter=";")
 fuel      = pd.read_csv(BASE / "tech_fuel_data2.csv",   delimiter=";")
 co2_df    = pd.read_csv(BASE / "co2_price2.1.csv",      delimiter=";")
@@ -26,6 +27,16 @@ turbo     = pd.read_csv(BASE / "turbo_retrofit.1.csv",  delimiter=";")
 new_cost  = pd.read_csv(BASE / "new_ship_cost.1.csv",   delimiter=";")
 new_specs = pd.read_csv(BASE / "new_fleet_data2.1.csv", delimiter=";")
 routes_df = pd.read_excel(BASE / "shipping_routes.xlsx")
+
+# ───────────────────────────────────────────────────────────────────────────────
+# 2.1) String-Spalten bereinigen (Title Case für Konsistenz)
+# ───────────────────────────────────────────────────────────────────────────────
+for df in (fleet, fuel, turbo, new_cost, new_specs):
+    for col in ("Ship_Type", "Fuel", "Fuel_Type"):
+        if col in df.columns:
+            df[col] = df[col].astype(str).str.strip().str.title()
+
+routes_df["Ship"] = routes_df["Ship"].astype(str).str.strip().str.title()
 
 # ───────────────────────────────────────────────────────────────────────────────
 # 3) Debug: Vergleiche MJ_old vs. MJ_new direkt nach Einlesen
@@ -98,7 +109,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     # ───────────────────────────────────────────────────────────────────────────
     # 4.2 ERA-/ECA-Anteile pro Schiff berechnen
     # ───────────────────────────────────────────────────────────────────────────
-    # Wichtig: Vermeide Shadowing von globalem routes_df; benutze lokalen Namen "routes_local"
+    # Verwende eine lokale Kopie, um globales routes_df nicht zu überschreiben
     routes_local = routes_df[[
         "Ship", "Nautical Miles", "Share of ERA", "Energy Consumption [MJ] WtW"
     ]].dropna(subset=["Ship"])
@@ -320,13 +331,11 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     # ───────────────────────────────────────────────────────────────────────────
     # 10) CO₂-Ausstoß-Vergleich berechnen (ohne Discounting)
     # ───────────────────────────────────────────────────────────────────────────
-    # 10.1 Gesamt-Baseline-Emission (t CO₂)
     total_baseline_co2_t = sum(
         baseline_co2_g[(s, y)] / 1_000_000
         for s in ships for y in YEARS_FULL
     )
 
-    # 10.2 Gesamt-Optimierte-Emission (t CO₂)
     total_opt_co2_t = 0.0
     for s in ships:
         row_s  = summary_df.loc[summary_df.Ship == s].iloc[0]
