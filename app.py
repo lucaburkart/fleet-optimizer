@@ -16,7 +16,7 @@ st.set_page_config(page_title="Fleet Optimization", layout="wide")
 st.write("✅ App geladen – UI ist aktiv")
 
 # ───────────────────────────────────────────────────────────────────────────────
-# 2) Daten einlesen
+# 2) Daten einlesen (globale DataFrames)
 # ───────────────────────────────────────────────────────────────────────────────
 BASE = Path(".")
 fleet     = pd.read_csv(BASE / "fleet_data2.1.csv",     delimiter=";")
@@ -96,14 +96,15 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     }
 
     # ───────────────────────────────────────────────────────────────────────────
-    # 5) ERA-/ECA-Anteile pro Schiff berechnen
+    # 4.2 ERA-/ECA-Anteile pro Schiff berechnen
     # ───────────────────────────────────────────────────────────────────────────
-    routes_df = routes_df[[
+    # Wichtig: Vermeide Shadowing von globalem routes_df; benutze lokalen Namen "routes_local"
+    routes_local = routes_df[[
         "Ship", "Nautical Miles", "Share of ERA", "Energy Consumption [MJ] WtW"
     ]].dropna(subset=["Ship"])
 
     energy_groups = {}
-    for ship, grp in routes_df.groupby("Ship"):
+    for ship, grp in routes_local.groupby("Ship"):
         tot_mj     = grp["Energy Consumption [MJ] WtW"].sum()
         tot_mj_eca = (grp["Energy Consumption [MJ] WtW"] * grp["Share of ERA"]).sum()
         energy_groups[ship] = {
@@ -114,7 +115,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
         }
 
     # ───────────────────────────────────────────────────────────────────────────
-    # 6) Parameter-Sets
+    # 5) Parameter-Sets
     # ───────────────────────────────────────────────────────────────────────────
     ships      = fleet["Ship_Type"].unique()
     YEARS_DEC  = list(range(2025, 2051, 5))
@@ -125,7 +126,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     dfac       = lambda y: 1 / ((1 + discount) ** (y - 2025))
 
     # ───────────────────────────────────────────────────────────────────────────
-    # 7) Diskontierte Jahreskosten + CO₂-Emissions-Daten berechnen
+    # 6) Diskontierte Jahreskosten + CO₂-Emissions-Daten berechnen
     # ───────────────────────────────────────────────────────────────────────────
     baseline_cost   = {}
     retro_cost      = {}
@@ -149,7 +150,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
 
         for y in YEARS_FULL:
             # ───────────────────────────────────────────────────────────
-            # 7.1 Baseline-Jahreskosten & CO₂ (Diesel/HFO-Mix)
+            # 6.1 Baseline-Jahreskosten & CO₂ (Diesel/HFO-Mix)
             # ───────────────────────────────────────────────────────────
             cost_eca = 0.0
             if MJe > 0:
@@ -181,7 +182,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
             baseline_cost[(s, y)] = (cost_eca + cost_noeca + co2_amt + ma) * dfac(y)
 
             # ───────────────────────────────────────────────────────────
-            # 7.2 Retrofit-Kosten ab Jahr y (operativ + Capex) & CO₂
+            # 6.2 Retrofit-Kosten ab Jahr y (operativ + Capex) & CO₂
             # ───────────────────────────────────────────────────────────
             save_pct = T_SAVE.get((s, y), 0) / 100
             MJe_r = MJe * voy * (1 - save_pct)
@@ -207,7 +208,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
             retro_cost[(s, y)] = ((cost_eca_r + cost_noeca_r + co2_r + ma_r) * dfac(y)) + capex_r
 
             # ───────────────────────────────────────────────────────────
-            # 7.3 Neubau-Kosten ab Jahr y (operativ + Capex) & CO₂
+            # 6.3 Neubau-Kosten ab Jahr y (operativ + Capex) & CO₂
             # ───────────────────────────────────────────────────────────
             MJv_n = MJv * factor
             MJn_n = MJn * factor  # dieser Term wird in der Regel nicht separat gebraucht, bleibt für Konsistenz
@@ -232,7 +233,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
                 new_cost_op[(s, y, f)] = ((cost_eca_n + cost_noeca_n + co2_n + ma_n) * dfac(y)) + capex_n
 
     # ───────────────────────────────────────────────────────────────────────────
-    # 8) Barwerte (NPV) berechnen: pv_base, delta_retro, delta_new
+    # 7) Barwerte (NPV) berechnen: pv_base, delta_retro, delta_new
     # ───────────────────────────────────────────────────────────────────────────
     pv_base = {s: sum(baseline_cost[(s, y)] for y in YEARS_FULL) for s in ships}
 
@@ -256,7 +257,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
                 delta_new[(s, y0, f)] = diff_sum
 
     # ───────────────────────────────────────────────────────────────────────────
-    # 9) MILP-Modell aufsetzen (rein linear)
+    # 8) MILP-Modell aufsetzen (rein linear)
     # ───────────────────────────────────────────────────────────────────────────
     mdl = LpProblem("Fleet_Optimization", LpMinimize)
 
@@ -286,7 +287,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
         raise RuntimeError(f"Modell nicht optimal (Status {mdl.status})")
 
     # ───────────────────────────────────────────────────────────────────────────
-    # 10) Ergebnis-Reporting (NPV & Flottenentscheidungen)
+    # 9) Ergebnis-Reporting (NPV & Flottenentscheidungen)
     # ───────────────────────────────────────────────────────────────────────────
     obj_opt  = value(mdl.objective)
     obj_base = sum(pv_base[s] for s in ships)
@@ -317,15 +318,15 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     summary_df = pd.DataFrame(summary)
 
     # ───────────────────────────────────────────────────────────────────────────
-    # 11) CO₂-Ausstoß-Vergleich berechnen (ohne Discounting)
+    # 10) CO₂-Ausstoß-Vergleich berechnen (ohne Discounting)
     # ───────────────────────────────────────────────────────────────────────────
-    # 11.1 Gesamt-Baseline-Emission (t CO₂)
+    # 10.1 Gesamt-Baseline-Emission (t CO₂)
     total_baseline_co2_t = sum(
         baseline_co2_g[(s, y)] / 1_000_000
         for s in ships for y in YEARS_FULL
     )
 
-    # 11.2 Gesamt-Optimierte-Emission (t CO₂)
+    # 10.2 Gesamt-Optimierte-Emission (t CO₂)
     total_opt_co2_t = 0.0
     for s in ships:
         row_s  = summary_df.loc[summary_df.Ship == s].iloc[0]
