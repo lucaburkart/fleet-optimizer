@@ -265,12 +265,12 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     obj_base = sum(pv_base[s] for s in ships)
 
     comp_df = pd.DataFrame({
-        "Variante": ["Optimized", "Diesel-only"],
-        "Kosten NPV (USD)": [obj_opt, obj_base]
+        "Variant": ["Optimized", "Diesel-only"],
+        "Cost NPV (USD)": [obj_opt, obj_base]
     })
     savings_df = pd.DataFrame({
-        "Messgröße": ["Absolute Savings (USD)", "Relative Savings (%)"],
-        "Wert":      [obj_base - obj_opt, (obj_base - obj_opt) / obj_base * 100]
+        "Measurement": ["Absolute Savings (USD)", "Relative Savings (%)"],
+        "Value":      [obj_base - obj_opt, (obj_base - obj_opt) / obj_base * 100]
     })
 
     summary = []
@@ -344,9 +344,9 @@ def run_fleet_optimization(co2_prices: dict[int, float],
 
     # DataFrame für den direkten Vergleich
     co2_compare = pd.DataFrame({
-        "Variante": ["Optimiert", "Nur Diesel/HFO"],
-        "CO2 gesamt (t)": [total_co2_opt, total_co2_base],
-        "Ersparnis (t)":  [total_co2_base - total_co2_opt, 0.0]
+        "Variant": ["Optimiert", "Nur Diesel/HFO"],
+        "Total C02 (t)": [total_co2_opt, total_co2_base],
+        "Savings (t)":  [total_co2_base - total_co2_opt, 0.0]
     })
 
     return comp_df, savings_df, summary_df, co2_compare
