@@ -11,7 +11,7 @@ from pulp import (
 
 # ───────────────────────────────────────────────────────────────────────────────
 st.set_page_config(page_title="Fleet Optimization", layout="wide")
-st.write("✅ App geladen – UI ist aktiv")
+st.write("✅ App loaded")
 # ───────────────────────────────────────────────────────────────────────────────
 
 # ───────────────────────────────────────────────────────────────────────────────
@@ -265,11 +265,11 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     obj_base = sum(pv_base[s] for s in ships)
 
     comp_df = pd.DataFrame({
-        "Variante": ["Optimiert", "Diesel-only"],
+        "Variante": ["Optimized", "Diesel-only"],
         "Kosten NPV (USD)": [obj_opt, obj_base]
     })
     savings_df = pd.DataFrame({
-        "Messgröße": ["Ersparnis absolut (USD)", "Ersparnis relativ (%)"],
+        "Messgröße": ["Absolute Savings (USD)", "Relative Savings (%)"],
         "Wert":      [obj_base - obj_opt, (obj_base - obj_opt) / obj_base * 100]
     })
 
