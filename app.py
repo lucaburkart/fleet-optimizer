@@ -389,7 +389,7 @@ if st.sidebar.button("🔍 Run Optimization"):
     st.success("Fertig!")
 
     st.subheader("📊 Kostenvergleich (NPV)")
-    st.dataframe(comp_df.style.format({"Cost NPV (USD)": "{:,.0f}"}))s
+    st.dataframe(comp_df.style.format({"Cost NPV (USD)": "{:,.0f}"}))
 
     st.subheader("💰 Ersparnis")
     st.dataframe(savings_df.style.format({"Value": "{:.2f}"}))
