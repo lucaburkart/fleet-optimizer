@@ -358,7 +358,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
 YE_REF = [2025, 2030, 2035, 2040, 2045, 2050]
 
 # CO₂-Preis Slider
-st.sidebar.header("CO₂-Preis (USD/t)")
+st.sidebar.header("CO₂-Price (USD/t)")
 co2_ref = {y: st.sidebar.slider(f"CO₂ Price in {y}", 0, 1000, 100, 50) for y in YE_REF}
 co2_prices = {
     y: co2_ref[max(k for k in YE_REF if k <= y)]
@@ -366,7 +366,7 @@ co2_prices = {
 }
 
 # Diesel-Preis Slider
-st.sidebar.header("Diesel-Preis (USD/kg)")
+st.sidebar.header("Diesel-Price (USD/kg)")
 diesel_ref = {y: st.sidebar.slider(f"Diesel Price in {y}", 0.0, 10.0, 1.0, 0.5) for y in YE_REF}
 diesel_prices = {
     y: diesel_ref[max(k for k in YE_REF if k <= y)]
@@ -374,7 +374,7 @@ diesel_prices = {
 }
 
 # HFO-Preis Slider (nun 0.0–1.5 USD/kg)
-st.sidebar.header("HFO-Preis (USD/kg)")
+st.sidebar.header("HFO-Price (USD/kg)")
 hfo_ref = {y: st.sidebar.slider(f"HFO Price in {y}", 0.0, 1.5, 1.0, 0.1) for y in YE_REF}
 hfo_prices = {
     y: hfo_ref[max(k for k in YE_REF if k <= y)]
@@ -382,23 +382,23 @@ hfo_prices = {
 }
 
 if st.sidebar.button("🔍 Run Optimization"):
-    with st.spinner("Berechne optimale Flotte…"):
+    with st.spinner("Calculating optimal Fleet…"):
         comp_df, savings_df, summary_df, co2_compare = run_fleet_optimization(
             co2_prices, diesel_prices, hfo_prices
         )
     st.success("Fertig!")
 
     st.subheader("📊 Kostenvergleich (NPV)")
-    st.dataframe(comp_df.style.format({"Kosten NPV (USD)": "{:,.0f}"}))
+    st.dataframe(comp_df.style.format({"Cost NPV (USD)": "{:,.0f}"}))s
 
     st.subheader("💰 Ersparnis")
-    st.dataframe(savings_df.style.format({"Wert": "{:.2f}"}))
+    st.dataframe(savings_df.style.format({"Value": "{:.2f}"}))
 
-    st.subheader("🚢 Flotten-Entscheidungen")
+    st.subheader("🚢 Fleet-Decision")
     st.dataframe(summary_df)
 
-    st.subheader("🌍 Aggregierter CO₂-Vergleich (2025–2050)")
+    st.subheader("🌍 C02-Comparison (2025–2050)")
     st.dataframe(
         co2_compare
-        .style.format({"CO2 gesamt (t)": "{:,.0f}", "Ersparnis (t)": "{:,.0f}"})
+        .style.format({"Total CO2 (t)": "{:,.0f}", "Savings (t)": "{:,.0f}"})
     )
