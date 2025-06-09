@@ -26,7 +26,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
     hfo_prices:    Dict Jahr → HFO-Preis (USD/kg)
 
     Rückgabe:
-      comp_df      → DataFrame: [„Optimiert“, „Diesel-only“] vs. NPV-Kosten
+      comp_df      → DataFrame: [„Optimized“, „Diesel-only“] vs. NPV-Kosten
       savings_df   → DataFrame: absolute und relative Ersparnis
       summary_df   → DataFrame: pro Schiff – gewähltes Retrofit-Jahr und Neubau-Jahr/Fuel
       co2_compare  → DataFrame: Gesamte CO₂-Emissionen optimiert vs. Baseline (t)
@@ -344,7 +344,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
 
     # DataFrame für den direkten Vergleich
     co2_compare = pd.DataFrame({
-        "Variant": ["Optimiert", "Nur Diesel/HFO"],
+        "Variant": ["Optimiert", "Diesel/HFO only"],
         "Total C02 (t)": [total_co2_opt, total_co2_base],
         "Savings (t)":  [total_co2_base - total_co2_opt, 0.0]
     })
