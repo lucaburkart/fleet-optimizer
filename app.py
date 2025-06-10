@@ -344,7 +344,7 @@ def run_fleet_optimization(co2_prices: dict[int, float],
 
     # DataFrame für den direkten Vergleich
     co2_compare = pd.DataFrame({
-        "Variant": ["Optimiert", "Diesel/HFO only"],
+        "Variant": ["Optimized", "Diesel/HFO only"],
         "Total C02 (t)": [total_co2_opt, total_co2_base],
         "Savings (t)":  [total_co2_base - total_co2_opt, 0.0]
     })
